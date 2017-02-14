@@ -16,7 +16,7 @@ Note how the below constructor shows in which order it expects its parameters:
 class Rectangle
 {
 public:
-    Rectangle(Width width, Height height) : width\_(width.get()), height\_(height.get()) {}
+    Rectangle(Width width, Height height) : width_(width.get()), height_(height.get()) {}
     double getWidth() const { return width_; }
     double getHeight() const { return height_; }
 
