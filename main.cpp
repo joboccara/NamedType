@@ -25,11 +25,11 @@ private:
     Meter height_;
 };
 
-using NameRef = NamedType<std::string&, struct NameRefParameter, Printable>;
+using NameRef = NamedType<std::string&, struct NameRefParameter>;
 
 void printName(const NameRef name)
 {
-    std::cout << name << '\n';
+    std::cout << name.get() << '\n';
 }
 
 template<typename Function>
