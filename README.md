@@ -4,7 +4,7 @@ This project experiments with strong types in C++.
 
 It central piece is the templated class NamedType, which can be used to declare a strong type with a typedef-like syntax:
 
-```
+```cpp
 using Width = NamedType<double, struct WidthParameter>;
 using Height = NamedType<double, struct WidthParameter>;
 ```
