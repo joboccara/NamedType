@@ -12,7 +12,7 @@ using Height = NamedType<double, struct WidthParameter>;
 which can be used to make interfaces more expressive and more robust.
 Note how the below constructor shows in which order it expects its parameters:
 
-```
+```cpp
 class Rectangle
 {
 public:
@@ -30,7 +30,7 @@ private:
 
 This implementation of strong types can be used to add strong typing over generic or unknown types such as lambdas:
 
-```
+```cpp
 template<typename Function>
 using Comparator = NamedType<Function, struct ComparatorParameter>;
 
