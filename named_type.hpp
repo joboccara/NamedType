@@ -11,7 +11,7 @@ class NamedType : public Skills<NamedType<T, Parameter, Skills...>>...
 public:
     explicit NamedType(T const& value) : value_(value) {}
     template<typename T_ = T>
-    explicit NamedType(T&& value, typename std::enable_if<!std::is_reference<T_>::value, std::nullptr_t>::type = nullptr) : value_(std::move(value)) {}
+    explicit NamedType(T&& value, typename std::enable_if<!std::is_reference<T_>{}, std::nullptr_t>::type = nullptr) : value_(std::move(value)) {}
 
     T& get() { return value_; }
     T const& get() const {return value_; }
