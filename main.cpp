@@ -11,10 +11,14 @@ namespace test
 {
 
 using Meter = NamedType<double, struct MeterParameter, Addable>;
-using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
 Meter operator"" _meter(unsigned long long value)
 {
     return Meter(value);
+}
+using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
+Kilometer operator"" _kilometer(unsigned long long value)
+{
+    return Kilometer(value);
 }
 
 using Width = NamedType<Meter, struct WidthParameter>;
@@ -78,6 +82,23 @@ bool testMeterToKm()
     return displayDistanceInKilometer(31000_meter) == "31km";
 }
 
+std::string displayDistanceInMeter(Meter d)
+{
+    std::ostringstream result;
+    result << d.get() << "m";
+    return result.str();
+}
+
+bool testKmToMeter()
+{
+    return displayDistanceInMeter(31_kilometer) == "31000m";
+}
+
+bool testMeterToKmWithDecimals()
+{
+    return displayDistanceInKilometer(31234_meter) == "31.234km";
+}
+
 template <typename TestFunction>
 void launchTest(std::string const& testName, TestFunction testFunction)
 {
@@ -90,6 +111,8 @@ void launchTests()
     launchTest("Passing by reference", testReference);
     launchTest("Generic type", testGenericType);
     launchTest("meter to km", testMeterToKm);
+    launchTest("km to meter", testKmToMeter);
+    launchTest("meter to km with decimals", testMeterToKmWithDecimals);
 }
 
 }
