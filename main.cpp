@@ -1,19 +1,20 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 #include "named_type.hpp"
 
 // Usage examples
+
+namespace 
+{
+namespace test
+{
 
 using Meter = NamedType<double, struct MeterParameter, Addable>;
 using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
 Meter operator"" _meter(unsigned long long value)
 {
     return Meter(value);
-}
-
-Kilometer operator"" _kilometer(unsigned long long value)
-{
-    return Kilometer(value);
 }
 
 using Width = NamedType<Meter, struct WidthParameter>;
@@ -31,42 +32,69 @@ private:
     Meter height_;
 };
 
+bool testBasicUsage()
+{
+    Rectangle r(Width(10_meter), Height(12_meter));
+    return r.getWidth().get() == 10 &&  r.getHeight().get() == 12;
+}
+
 using NameRef = NamedType<std::string&, struct NameRefParameter>;
 
-void printName(const NameRef name)
+void changeValue(const NameRef name)
 {
-    std::cout << name.get() << '\n';
+    name.get() = "value2";
+}
+
+bool testReference()
+{
+    std::string value = "value1";
+    changeValue(NameRef(value));
+    return value == "value2";
 }
 
 template<typename Function>
 using Comparator = NamedType<Function, struct ComparatorParameter>;
 
 template <typename Function>
-void performAction(Comparator<Function> comp)
+std::string performAction(Comparator<Function> comp)
 {
-    comp.get()();
+    return comp.get()();
 }
 
-void displayDistance(Kilometer d)
+bool testGenericType()
 {
-    std::cout << d.get() << "km\n";
+    return performAction(make_named<Comparator>([](){ return std::string("compare"); })) == "compare";
 }
 
+std::string displayDistanceInKilometer(Kilometer d)
+{
+    std::ostringstream result;
+    result << d.get() << "km";
+    return result.str();
+}
+
+bool testMeterToKm()
+{
+    return displayDistanceInKilometer(31000_meter) == "31km";
+}
+
+template <typename TestFunction>
+void launchTest(std::string const& testName, TestFunction testFunction)
+{
+    std::cout << "Test - " << testName << ": " << (testFunction() ? "OK" : "FAILED") << std::endl;
+}
+
+void launchTests()
+{
+    launchTest("Basic usage", testBasicUsage);
+    launchTest("Passing by reference", testReference);
+    launchTest("Generic type", testGenericType);
+    launchTest("meter to km", testMeterToKm);
+}
+
+}
+}
 int main()
 {
-    std::cout << "Basic example: Rectangle\n";
-    Rectangle r(Width(10_meter), Height(12_meter));
-    std::cout << "Rectangle of width " << r.getWidth().get() << "m and height " << r.getHeight().get() << "m\n";
-
-    std::cout << '\n';
-    std::cout << "Passing by reference\n";
-    std::string userInput = "Johnny";
-    printName(NameRef(userInput));
-
-    std::cout << '\n';
-    std::cout << "Strong lambda\n";
-    performAction(make_named<Comparator>([](){ std::cout << "compare\n"; }));
-
-    std::cout << '\n';
-    displayDistance(31000_meter);
+    test::launchTests();
 }
