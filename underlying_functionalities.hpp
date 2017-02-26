@@ -17,6 +17,13 @@ struct Addable : crtp<T, Addable>
 };
 
 template <typename T>
+struct Comparable : crtp<T, Comparable>
+{
+    bool operator==(T const& other) { return this->underlying().get() == other.get(); }
+    bool operator!=(T const& other) { return !(*this == other); }
+};
+
+template <typename T>
 struct Printable : crtp<T, Printable>
 {
     void print(std::ostream& os) const { os << this->underlying().get(); }

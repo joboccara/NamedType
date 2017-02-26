@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -10,16 +11,15 @@ namespace
 namespace test
 {
 
-using Meter = NamedType<double, struct MeterParameter, Addable>;
-Meter operator"" _meter(unsigned long long value)
-{
-    return Meter(value);
-}
+using Meter = NamedType<double, struct MeterParameter, Addable, Comparable>;
+Meter operator"" _meter(unsigned long long value) { return Meter(value); }
+//Meter operator"" _meter(long double value) { return Meter(value); }
+
 using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
-Kilometer operator"" _kilometer(unsigned long long value)
-{
-    return Kilometer(value);
-}
+Kilometer operator"" _kilometer(unsigned long long value) { return Kilometer(value); }
+Kilometer operator"" _kilometer(long double value) { return Kilometer(value); }
+
+using Millimeter = MultipleOf<Meter, std::ratio<1, 1000>>;
 
 using Width = NamedType<Meter, struct WidthParameter>;
 using Height = NamedType<Meter, struct HeightParameter>;
@@ -94,25 +94,58 @@ bool testKmToMeter()
     return displayDistanceInMeter(31_kilometer) == "31000m";
 }
 
+std::string displayDistanceInMillimeter(Millimeter d)
+{
+    std::ostringstream result;
+    result << std::fixed << std::setprecision(0) << d.get() << "mm";
+    return result.str();
+}
+
+bool testKmToMillimeter()
+{
+    return displayDistanceInMillimeter(31_kilometer) == "31000000mm";
+}
+
 bool testMeterToKmWithDecimals()
 {
     return displayDistanceInKilometer(31234_meter) == "31.234km";
 }
 
-template <typename TestFunction>
-void launchTest(std::string const& testName, TestFunction testFunction)
+bool testComparable()
 {
-    std::cout << "Test - " << testName << ": " << (testFunction() ? "OK" : "FAILED") << std::endl;
+    return 10_meter == 10_meter && !(10_meter == 11_meter)
+        && !(10_meter == 11_meter) && 10_meter !=  11_meter;
+}
+
+bool testAddableComparableConvertible()
+{
+    return 1_kilometer + 200_meter == 1200_meter
+        && 1_kilometer + 200_meter == 1.2_kilometer;
+}
+
+template <typename TestFunction>
+bool launchTest(std::string const& testName, TestFunction testFunction)
+{
+    const bool success = testFunction();
+    if (!success)
+        std::cout << "Test - " << testName << ": FAILED\n";
+    return success;
 }
 
 void launchTests()
 {
-    launchTest("Basic usage", testBasicUsage);
-    launchTest("Passing by reference", testReference);
-    launchTest("Generic type", testGenericType);
-    launchTest("meter to km", testMeterToKm);
-    launchTest("km to meter", testKmToMeter);
-    launchTest("meter to km with decimals", testMeterToKmWithDecimals);
+    bool success = true;
+    success &= launchTest("Basic usage", testBasicUsage);
+    success &= launchTest("Passing by reference", testReference);
+    success &= launchTest("Generic type", testGenericType);
+    success &= launchTest("meter to km", testMeterToKm);
+    success &= launchTest("km to meter", testKmToMeter);
+    success &= launchTest("km to mm", testKmToMillimeter);
+    success &= launchTest("meter to km with decimals", testMeterToKmWithDecimals);
+    success &= launchTest("comparable", testComparable);
+    success &= launchTest("addable comparable convertible", testAddableComparableConvertible);
+    if (success)
+        std::cout << "All tests PASSED\n";
 }
 
 }
