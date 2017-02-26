@@ -6,8 +6,15 @@
 #include <type_traits>
 #include "underlying_functionalities.hpp"
 
-template <typename T, typename Parameter, typename Ratio, template<typename> class... Skills>
-class NamedTypeImpl : public Skills<NamedTypeImpl<T, Parameter, Ratio, Skills...>>...
+template<typename T, T (*from)(T), T(*to)(T)>
+struct Convert
+{
+    static T convertFrom(T t) { return from(t); }
+    static T convertTo(T t) { return to(t); }
+};
+
+template <typename T, typename Parameter, typename Converter, template<typename> class... Skills>
+class NamedTypeImpl : public Skills<NamedTypeImpl<T, Parameter, Converter, Skills...>>...
 {
 public:
     // constructor
@@ -19,26 +26,35 @@ public:
     T& get() { return value_; }
     T const& get() const {return value_; }
 
-    // conversions with ratios
-    template <typename Ratio2>
-    operator NamedTypeImpl<T, Parameter, Ratio2, Skills...>() const
+    // conversions
+    using UnderlyingType = T;
+    template <typename Converter2>
+    operator NamedTypeImpl<T, Parameter, Converter2, Skills...>() const
     {
-        return NamedTypeImpl<T, Parameter, Ratio2, Skills...>(get() * Ratio::num / Ratio::den * Ratio2::den / Ratio2::num);
+        return NamedTypeImpl<T, Parameter, Converter2, Skills...>(Converter2::convertFrom(Converter::convertTo(get())));
     }
-    template<typename Ratio1, typename Ratio2>
-    using MultiplyRatio = std::ratio<Ratio1::num * Ratio2::num, Ratio1::den * Ratio2::den>;
-    template <typename Ratio2>
-    using GetMultiple = NamedTypeImpl<T, Parameter, MultiplyRatio<Ratio, Ratio2>, Skills...>;
+    template<T(*f)(T), T(*g)(T)>
+    struct compose
+    {
+        static T func(T t) { return f(g(t)); }
+    };
+    template<typename Converter1, typename Converter2>
+    using ComposeConverter = Convert<T, compose<Converter1::convertFrom, Converter2::convertFrom>::func, compose<Converter1::convertTo, Converter2::convertTo>::func>;
+    template <typename Converter2>
+    using GetConvertible = NamedTypeImpl<T, Parameter, ComposeConverter<Converter, Converter2>, Skills...>;
 
 private:
     T value_;
 };
 
 template <typename T, typename Parameter, template<typename> class... Skills>
-using NamedType = NamedTypeImpl<T, Parameter, std::ratio<1>, Skills...>;
+using NamedType = NamedTypeImpl<T, Parameter, ConvertWithRatio<T, std::ratio<1>>, Skills...>;
 
 template <typename StrongType, typename Ratio>
-using MultipleOf = typename StrongType::template GetMultiple<Ratio>;
+using MultipleOf = typename StrongType::template GetConvertible<ConvertWithRatio<typename StrongType::UnderlyingType, Ratio>>;
+
+template <typename StrongType, typename Converter>
+using ConvertibleTo = typename StrongType::template GetConvertible<Converter>;
 
 template<template<typename T> class StrongType, typename T>
 StrongType<T> make_named(T const& value)

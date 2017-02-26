@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -10,6 +11,13 @@ namespace
 {
 namespace test
 {
+
+template<typename T>
+decltype(auto) tee(T&& value)
+{
+    std::cout << value << '\n';
+    return std::forward<T>(value);
+}
 
 using Meter = NamedType<double, struct MeterParameter, Addable, Comparable>;
 Meter operator"" _meter(unsigned long long value) { return Meter(value); }
@@ -70,45 +78,39 @@ bool testGenericType()
     return performAction(make_named<Comparator>([](){ return std::string("compare"); })) == "compare";
 }
 
-std::string displayDistanceInKilometer(Kilometer d)
+double distanceInKilometer(Kilometer d)
 {
-    std::ostringstream result;
-    result << d.get() << "km";
-    return result.str();
+    return d.get();
 }
 
 bool testMeterToKm()
 {
-    return displayDistanceInKilometer(31000_meter) == "31km";
+    return distanceInKilometer(31000_meter) == 31;
 }
 
-std::string displayDistanceInMeter(Meter d)
+double distanceInMeter(Meter d)
 {
-    std::ostringstream result;
-    result << d.get() << "m";
-    return result.str();
+    return d.get();
 }
 
 bool testKmToMeter()
 {
-    return displayDistanceInMeter(31_kilometer) == "31000m";
+    return distanceInMeter(31_kilometer) == 31000;
 }
 
-std::string displayDistanceInMillimeter(Millimeter d)
+double distanceInMillimeter(Millimeter d)
 {
-    std::ostringstream result;
-    result << std::fixed << std::setprecision(0) << d.get() << "mm";
-    return result.str();
+    return d.get();
 }
 
 bool testKmToMillimeter()
 {
-    return displayDistanceInMillimeter(31_kilometer) == "31000000mm";
+    return distanceInMillimeter(31_kilometer) == 31000000;
 }
 
 bool testMeterToKmWithDecimals()
 {
-    return displayDistanceInKilometer(31234_meter) == "31.234km";
+    return distanceInKilometer(31234_meter) == 31.234;
 }
 
 bool testComparable()
@@ -121,6 +123,66 @@ bool testAddableComparableConvertible()
 {
     return 1_kilometer + 200_meter == 1200_meter
         && 1_kilometer + 200_meter == 1.2_kilometer;
+}
+
+struct ConvertMileFromAndToKilometer
+{
+    static double convertFrom(double kilometer) { return kilometer / 1.609; }
+    static double convertTo(double mile) { return mile * 1.609; }
+};
+
+using Mile = ConvertibleTo<Kilometer, ConvertMileFromAndToKilometer>;
+Mile operator""_mile(unsigned long long mile) { return Mile(mile); }
+
+bool testMileToKm()
+{
+    return distanceInKilometer(2_mile) == 2 * 1.609;
+}
+
+bool testMileToMeter()
+{
+    return distanceInMeter(2_mile) == 2 * 1000 * 1.609;
+}
+
+double distanceInMile(Mile d)
+{
+    return d.get();
+}
+
+bool testKmToMile()
+{
+    return distanceInMile(2_kilometer) == 2 / 1.609;
+}
+
+using Watt = NamedType<double, struct WattTag>;
+Watt operator""_watt(unsigned long long watt) { return Watt(watt); }
+
+struct ConvertDBFromAndToWatt
+{
+    static double convertFrom(double watt) { return 10 * log(watt) / log(10); }
+    static double convertTo(double db) { return pow(10, db / 10); }
+};
+using dB = ConvertibleTo<Watt, ConvertDBFromAndToWatt>;
+dB operator""_dB(long double db) { return dB(db); }
+
+double powerInDb(dB power)
+{
+    return power.get();
+}
+
+bool testWattToDb()
+{
+    return abs(powerInDb(230_watt) - 23.617) < 10e-2;
+}
+
+double powerInWatt(Watt power)
+{
+    return power.get();
+}
+
+bool testDbToWatt()
+{
+    return abs(powerInWatt(25.6_dB) - 363.078) < 10e-2;
 }
 
 template <typename TestFunction>
@@ -141,6 +203,11 @@ void launchTests()
     success &= launchTest("meter to km", testMeterToKm);
     success &= launchTest("km to meter", testKmToMeter);
     success &= launchTest("km to mm", testKmToMillimeter);
+    success &= launchTest("mile to km", testMileToKm);
+    success &= launchTest("km to mile", testKmToMile);
+    success &= launchTest("mile to meter", testMileToMeter);
+    success &= launchTest("dB to watt", testDbToWatt);
+    success &= launchTest("watt to dB", testWattToDb);
     success &= launchTest("meter to km with decimals", testMeterToKmWithDecimals);
     success &= launchTest("comparable", testComparable);
     success &= launchTest("addable comparable convertible", testAddableComparableConvertible);
