@@ -5,9 +5,15 @@
 // Usage examples
 
 using Meter = NamedType<double, struct MeterParameter, Addable>;
+using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
 Meter operator"" _meter(unsigned long long value)
 {
     return Meter(value);
+}
+
+Kilometer operator"" _kilometer(unsigned long long value)
+{
+    return Kilometer(value);
 }
 
 using Width = NamedType<Meter, struct WidthParameter>;
@@ -41,6 +47,11 @@ void performAction(Comparator<Function> comp)
     comp.get()();
 }
 
+void displayDistance(Kilometer d)
+{
+    std::cout << d.get() << "km\n";
+}
+
 int main()
 {
     std::cout << "Basic example: Rectangle\n";
@@ -55,4 +66,7 @@ int main()
     std::cout << '\n';
     std::cout << "Strong lambda\n";
     performAction(make_named<Comparator>([](){ std::cout << "compare\n"; }));
+
+    std::cout << '\n';
+    displayDistance(31000_meter);
 }
