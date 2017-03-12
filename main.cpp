@@ -27,7 +27,9 @@ using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
 Kilometer operator"" _kilometer(unsigned long long value) { return Kilometer(value); }
 Kilometer operator"" _kilometer(long double value) { return Kilometer(value); }
 
-using Millimeter = MultipleOf<Meter, std::ratio<1, 1000>>;
+using Millimeter = MultipleOf<Meter, std::milli>;
+
+using Centimeter = MultipleOf<Millimeter, std::ratio<10>>;
 
 using Width = NamedType<Meter, struct WidthParameter>;
 using Height = NamedType<Meter, struct HeightParameter>;
@@ -106,6 +108,11 @@ double distanceInMillimeter(Millimeter d)
 bool testKmToMillimeter()
 {
     return distanceInMillimeter(31_kilometer) == 31000000;
+}
+
+bool testCmToMeter()
+{
+    return distanceInMeter(Centimeter(31)) == 0.31;
 }
 
 bool testMeterToKmWithDecimals()
@@ -203,6 +210,7 @@ void launchTests()
     success &= launchTest("meter to km", testMeterToKm);
     success &= launchTest("km to meter", testKmToMeter);
     success &= launchTest("km to mm", testKmToMillimeter);
+    success &= launchTest("cm to m", testCmToMeter);
     success &= launchTest("mile to km", testMileToKm);
     success &= launchTest("km to mile", testKmToMile);
     success &= launchTest("mile to meter", testMileToMeter);
