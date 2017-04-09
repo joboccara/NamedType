@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include "named_type.hpp"
 
 // Usage examples
@@ -12,12 +13,14 @@ namespace
 namespace test
 {
 
+/*
 template<typename T>
 decltype(auto) tee(T&& value)
 {
     std::cout << value << '\n';
     return std::forward<T>(value);
 }
+*/
 
 using Meter = NamedType<double, struct MeterParameter, Addable, Comparable>;
 Meter operator"" _meter(unsigned long long value) { return Meter(value); }
@@ -139,7 +142,7 @@ struct ConvertMileFromAndToKilometer
 };
 
 using Mile = ConvertibleTo<Kilometer, ConvertMileFromAndToKilometer>;
-Mile operator""_mile(unsigned long long mile) { return Mile(mile); }
+Mile operator"" _mile(unsigned long long mile) { return Mile(mile); }
 
 bool testMileToKm()
 {
@@ -162,7 +165,7 @@ bool testKmToMile()
 }
 
 using Watt = NamedType<double, struct WattTag>;
-Watt operator""_watt(unsigned long long watt) { return Watt(watt); }
+Watt operator"" _watt(unsigned long long watt) { return Watt(watt); }
 
 struct ConvertDBFromAndToWatt
 {
@@ -170,7 +173,7 @@ struct ConvertDBFromAndToWatt
     static double convertTo(double db) { return pow(10, db / 10); }
 };
 using dB = ConvertibleTo<Watt, ConvertDBFromAndToWatt>;
-dB operator""_dB(long double db) { return dB(db); }
+dB operator"" _dB(long double db) { return dB(db); }
 
 double powerInDb(dB power)
 {
@@ -190,6 +193,18 @@ double powerInWatt(Watt power)
 bool testDbToWatt()
 {
     return abs(powerInWatt(25.6_dB) - 363.078) < 10e-2;
+}
+
+bool testHash()
+{
+    using SerialNumber = NamedType<std::string, struct SerialNumberTag, Comparable, Hashable>;
+
+    std::unordered_map<SerialNumber, int> hashMap = { {SerialNumber{"AA11"}, 10}, {SerialNumber{"BB22"}, 20} };
+    SerialNumber cc33{"CC33"};
+    hashMap[cc33] = 30;
+    return hashMap[SerialNumber{"AA11"}] == 10
+        && hashMap[SerialNumber{"BB22"}] == 20
+        && hashMap[cc33] == 30;
 }
 
 template <typename TestFunction>
@@ -219,6 +234,7 @@ void launchTests()
     success &= launchTest("meter to km with decimals", testMeterToKmWithDecimals);
     success &= launchTest("comparable", testComparable);
     success &= launchTest("addable comparable convertible", testAddableComparableConvertible);
+    success &= launchTest("hash", testHash);
     if (success)
         std::cout << "All tests PASSED\n";
 }
