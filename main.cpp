@@ -182,7 +182,7 @@ double powerInDb(dB power)
 
 bool testWattToDb()
 {
-    return abs(powerInDb(230_watt) - 23.617) < 10e-2;
+    return std::abs(powerInDb(230_watt) - 23.617) < 10e-2;
 }
 
 double powerInWatt(Watt power)
@@ -192,7 +192,7 @@ double powerInWatt(Watt power)
 
 bool testDbToWatt()
 {
-    return abs(powerInWatt(25.6_dB) - 363.078) < 10e-2;
+    return std::abs(powerInWatt(25.6_dB) - 363.078) < 10e-2;
 }
 
 bool testHash()
