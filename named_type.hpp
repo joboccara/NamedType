@@ -33,15 +33,19 @@ public:
     {
         return NamedTypeImpl<T, Parameter, Converter2, Skills...>(Converter2::convertFrom(Converter::convertTo(get())));
     }
-    template<T(*f)(T), T(*g)(T)>
-    struct compose
+    
+    struct conversions
     {
-        static T func(T t) { return f(g(t)); }
+        template<T(*f)(T), T(*g)(T)>
+        struct compose
+        {
+            static T func(T t) { return f(g(t)); }
+        };
+        template<typename Converter1, typename Converter2>
+        using ComposeConverter = Convert<T, compose<Converter1::convertFrom, Converter2::convertFrom>::func, compose<Converter1::convertTo, Converter2::convertTo>::func>;
+        template <typename Converter2>
+        using GetConvertible = NamedTypeImpl<T, Parameter, ComposeConverter<Converter, Converter2>, Skills...>;
     };
-    template<typename Converter1, typename Converter2>
-    using ComposeConverter = Convert<T, compose<Converter1::convertFrom, Converter2::convertFrom>::func, compose<Converter1::convertTo, Converter2::convertTo>::func>;
-    template <typename Converter2>
-    using GetConvertible = NamedTypeImpl<T, Parameter, ComposeConverter<Converter, Converter2>, Skills...>;
 
 private:
     T value_;
@@ -51,10 +55,10 @@ template <typename T, typename Parameter, template<typename> class... Skills>
 using NamedType = NamedTypeImpl<T, Parameter, ConvertWithRatio<T, std::ratio<1>>, Skills...>;
 
 template <typename StrongType, typename Ratio>
-using MultipleOf = typename StrongType::template GetConvertible<ConvertWithRatio<typename StrongType::UnderlyingType, Ratio>>;
+using MultipleOf = typename StrongType::conversions::template GetConvertible<ConvertWithRatio<typename StrongType::UnderlyingType, Ratio>>;
 
 template <typename StrongType, typename Converter>
-using ConvertibleTo = typename StrongType::template GetConvertible<Converter>;
+using ConvertibleTo = typename StrongType::conversions::template GetConvertible<Converter>;
 
 template<template<typename T> class StrongType, typename T>
 StrongType<T> make_named(T const& value)
