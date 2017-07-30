@@ -6,6 +6,9 @@
 
 #include <iostream>
 
+namespace fluent
+{
+    
 template <typename T>
 struct Incrementable : crtp<T, Incrementable>
 {
@@ -44,19 +47,22 @@ struct Hashable
     static constexpr bool is_hashable = true;
 };
 
+} // namespace fluent
+
 namespace std
 {
 template <typename T, typename Parameter, typename Converter, template<typename> class... Skills>
-struct hash<NamedTypeImpl<T, Parameter, Converter, Skills...>>
+struct hash<fluent::NamedTypeImpl<T, Parameter, Converter, Skills...>>
 {
-    using NamedType = NamedTypeImpl<T, Parameter, Converter, Skills...>;
+    using NamedType = fluent::NamedTypeImpl<T, Parameter, Converter, Skills...>;
     using checkIfHashable = typename std::enable_if<NamedType::is_hashable, void>::type;
     
-    size_t operator()(NamedTypeImpl<T, Parameter, Converter, Skills...> const& x) const
+    size_t operator()(fluent::NamedTypeImpl<T, Parameter, Converter, Skills...> const& x) const
     {
         return std::hash<T>()(x.get());
     }
 };
 }
+    
 
 #endif

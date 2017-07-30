@@ -22,20 +22,20 @@ decltype(auto) tee(T&& value)
 }
 */
 
-using Meter = NamedType<double, struct MeterParameter, Addable, Comparable>;
+using Meter = fluent::NamedType<double, struct MeterParameter, fluent::Addable, fluent::Comparable>;
 Meter operator"" _meter(unsigned long long value) { return Meter(value); }
 //Meter operator"" _meter(long double value) { return Meter(value); }
 
-using Kilometer = MultipleOf<Meter, std::ratio<1000>>;
+using Kilometer = fluent::MultipleOf<Meter, std::ratio<1000>>;
 Kilometer operator"" _kilometer(unsigned long long value) { return Kilometer(value); }
 Kilometer operator"" _kilometer(long double value) { return Kilometer(value); }
 
-using Millimeter = MultipleOf<Meter, std::milli>;
+using Millimeter = fluent::MultipleOf<Meter, std::milli>;
 
-using Centimeter = MultipleOf<Millimeter, std::ratio<10>>;
+using Centimeter = fluent::MultipleOf<Millimeter, std::ratio<10>>;
 
-using Width = NamedType<Meter, struct WidthParameter>;
-using Height = NamedType<Meter, struct HeightParameter>;
+using Width = fluent::NamedType<Meter, struct WidthParameter>;
+using Height = fluent::NamedType<Meter, struct HeightParameter>;
 
 class Rectangle
 {
@@ -55,7 +55,7 @@ bool testBasicUsage()
     return r.getWidth().get() == 10 &&  r.getHeight().get() == 12;
 }
 
-using NameRef = NamedType<std::string&, struct NameRefParameter>;
+using NameRef = fluent::NamedType<std::string&, struct NameRefParameter>;
 
 void changeValue(const NameRef name)
 {
@@ -70,7 +70,7 @@ bool testReference()
 }
 
 template<typename Function>
-using Comparator = NamedType<Function, struct ComparatorParameter>;
+using Comparator = fluent::NamedType<Function, struct ComparatorParameter>;
 
 template <typename Function>
 std::string performAction(Comparator<Function> comp)
@@ -80,7 +80,7 @@ std::string performAction(Comparator<Function> comp)
 
 bool testGenericType()
 {
-    return performAction(make_named<Comparator>([](){ return std::string("compare"); })) == "compare";
+    return performAction(fluent::make_named<Comparator>([](){ return std::string("compare"); })) == "compare";
 }
 
 double distanceInKilometer(Kilometer d)
@@ -141,7 +141,7 @@ struct ConvertMileFromAndToKilometer
     static double convertTo(double mile) { return mile * 1.609; }
 };
 
-using Mile = ConvertibleTo<Kilometer, ConvertMileFromAndToKilometer>;
+using Mile = fluent::ConvertibleTo<Kilometer, ConvertMileFromAndToKilometer>;
 Mile operator"" _mile(unsigned long long mile) { return Mile(mile); }
 
 bool testMileToKm()
@@ -164,7 +164,7 @@ bool testKmToMile()
     return distanceInMile(2_kilometer) == 2 / 1.609;
 }
 
-using Watt = NamedType<double, struct WattTag>;
+using Watt = fluent::NamedType<double, struct WattTag>;
 Watt operator"" _watt(unsigned long long watt) { return Watt(watt); }
 
 struct ConvertDBFromAndToWatt
@@ -172,7 +172,7 @@ struct ConvertDBFromAndToWatt
     static double convertFrom(double watt) { return 10 * log(watt) / log(10); }
     static double convertTo(double db) { return pow(10, db / 10); }
 };
-using dB = ConvertibleTo<Watt, ConvertDBFromAndToWatt>;
+using dB = fluent::ConvertibleTo<Watt, ConvertDBFromAndToWatt>;
 dB operator"" _dB(long double db) { return dB(db); }
 
 double powerInDb(dB power)
@@ -197,7 +197,7 @@ bool testDbToWatt()
 
 bool testHash()
 {
-    using SerialNumber = NamedType<std::string, struct SerialNumberTag, Comparable, Hashable>;
+    using SerialNumber = fluent::NamedType<std::string, struct SerialNumberTag, fluent::Comparable, fluent::Hashable>;
 
     std::unordered_map<SerialNumber, int> hashMap = { {SerialNumber{"AA11"}, 10}, {SerialNumber{"BB22"}, 20} };
     SerialNumber cc33{"CC33"};

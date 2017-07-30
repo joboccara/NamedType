@@ -3,6 +3,9 @@
 
 #include <ratio>
 
+namespace fluent
+{
+    
 template<typename T, typename Ratio>
 struct ConvertWithRatio
 {
@@ -15,5 +18,7 @@ class NamedTypeImpl;
 
 template <typename T, typename Parameter, template<typename> class... Skills>
 using NamedType = NamedTypeImpl<T, Parameter, ConvertWithRatio<T, std::ratio<1>>, Skills...>;
+
+} // namespace fluent
 
 #endif

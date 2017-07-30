@@ -1,6 +1,6 @@
 A **strong type** is a type used in place of another type to carry specific **meaning** through its **name**.
 
-This project experiments with strong types in C++.
+This project experiments with strong types in C++. All components are in the namespace `fluent`.
 
 ## Basic usage
 

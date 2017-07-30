@@ -6,6 +6,9 @@
 #include <type_traits>
 #include "underlying_functionalities.hpp"
 
+namespace fluent
+{
+    
 template<typename T, T (*from)(T), T(*to)(T)>
 struct Convert
 {
@@ -65,5 +68,7 @@ StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);
 }
+    
+} // namespace fluent
 
 #endif
