@@ -8,7 +8,7 @@
 
 namespace fluent
 {
-    
+
 template <typename T>
 struct Incrementable : crtp<T, Incrementable>
 {
@@ -34,6 +34,20 @@ struct Printable : crtp<T, Printable>
     void print(std::ostream& os) const { os << this->underlying().get(); }
 };
 
+template <typename Destination>
+struct ImplicitlyConvertible
+{
+    template <typename T>
+    struct templ : crtp<T, templ>
+    {
+        operator Destination() const
+        {
+            return this->underlying().get();
+        }
+    };
+    
+};
+    
 template <typename T, typename Parameter, template<typename> class... Skills>
 std::ostream& operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
 {

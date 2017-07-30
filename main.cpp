@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -128,6 +129,14 @@ bool testComparable()
     return 10_meter == 10_meter && !(10_meter == 11_meter)
         && !(10_meter == 11_meter) && 10_meter !=  11_meter;
 }
+    
+bool testConvertible()
+{
+    using MyInt = fluent::NamedType<int, struct MyIntTag, fluent::ImplicitlyConvertible<unsigned>::templ>;
+    MyInt myInt(-1);
+    int uMyInt = myInt;
+    return uMyInt == std::numeric_limits<unsigned>::max();
+}
 
 bool testAddableComparableConvertible()
 {
@@ -233,6 +242,7 @@ void launchTests()
     success &= launchTest("watt to dB", testWattToDb);
     success &= launchTest("meter to km with decimals", testMeterToKmWithDecimals);
     success &= launchTest("comparable", testComparable);
+    success &= launchTest("convertible", testConvertible);
     success &= launchTest("addable comparable convertible", testAddableComparableConvertible);
     success &= launchTest("hash", testHash);
     if (success)
