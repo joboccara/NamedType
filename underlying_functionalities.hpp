@@ -35,7 +35,7 @@ struct Printable : crtp<T, Printable>
 };
 
 template <typename Destination>
-struct ImplicitlyConvertible
+struct ImplicitlyConvertibleTo
 {
     template <typename T>
     struct templ : crtp<T, templ>
@@ -47,7 +47,7 @@ struct ImplicitlyConvertible
     };
     
 };
-    
+
 template <typename T, typename Parameter, template<typename> class... Skills>
 std::ostream& operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
 {

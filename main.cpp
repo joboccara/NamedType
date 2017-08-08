@@ -1,7 +1,6 @@
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <limits>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -130,14 +129,55 @@ bool testComparable()
         && !(10_meter == 11_meter) && 10_meter !=  11_meter;
 }
     
-bool testConvertible()
+bool testConvertibleWithOperator()
 {
-    using MyInt = fluent::NamedType<int, struct MyIntTag, fluent::ImplicitlyConvertible<unsigned>::templ>;
-    MyInt myInt(-1);
-    int uMyInt = myInt;
-    return uMyInt == std::numeric_limits<unsigned>::max();
+    struct B
+    {
+        B(int x) : x(x) {}
+        int x;
+    };
+    
+    struct A
+    {
+        A(int x) : x(x) {}
+        operator B () const { return B(x);}
+        int x;
+    };
+        
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::ImplicitlyConvertibleTo<B>::templ>;
+    StrongA strongA(A(42));
+    B b = strongA;
+    return b.x == 42;
 }
 
+bool testConvertibleWithConstructor()
+{
+    struct A
+    {
+        A(int x) : x(x) {}
+        int x;
+    };
+        
+    struct B
+    {
+        B(A a) : x(a.x) {}
+        int x;
+    };
+        
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::ImplicitlyConvertibleTo<B>::templ>;
+    StrongA strongA(A(42));
+    B b = strongA;
+    return b.x == 42;
+}
+    
+bool testConvertibleToItself()
+{
+    using MyInt = fluent::NamedType<int, struct MyIntTag, fluent::ImplicitlyConvertibleTo<int>::templ>;
+    MyInt myInt(42);
+    int i = myInt;
+    return i == 42;
+}
+    
 bool testAddableComparableConvertible()
 {
     return 1_kilometer + 200_meter == 1200_meter
@@ -242,7 +282,9 @@ void launchTests()
     success &= launchTest("watt to dB", testWattToDb);
     success &= launchTest("meter to km with decimals", testMeterToKmWithDecimals);
     success &= launchTest("comparable", testComparable);
-    success &= launchTest("convertible", testConvertible);
+    success &= launchTest("convertible with operator", testConvertibleWithOperator);
+    success &= launchTest("convertible with constructor", testConvertibleWithConstructor);
+    success &= launchTest("convertible to itself", testConvertibleToItself);
     success &= launchTest("addable comparable convertible", testAddableComparableConvertible);
     success &= launchTest("hash", testHash);
     if (success)
@@ -251,6 +293,7 @@ void launchTests()
 
 }
 }
+
 int main()
 {
     test::launchTests();
