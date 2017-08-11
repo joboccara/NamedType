@@ -8,7 +8,7 @@ It central piece is the templated class NamedType, which can be used to declare 
 
 ```cpp
 using Width = NamedType<double, struct WidthTag>;
-using Height = NamedType<double, struct WidthTag>;
+using Height = NamedType<double, struct HeightTag>;
 ```
 
 which can be used to make interfaces more expressive and more robust.
