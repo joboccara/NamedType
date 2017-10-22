@@ -5,6 +5,7 @@
 #include "named_type.fwd.hpp"
 
 #include <iostream>
+#include <memory>
 
 namespace fluent
 {
@@ -45,7 +46,6 @@ struct ImplicitlyConvertibleTo
             return this->underlying().get();
         }
     };
-    
 };
 
 template <typename T, typename Parameter, template<typename> class... Skills>
@@ -61,6 +61,35 @@ struct Hashable
     static constexpr bool is_hashable = true;
 };
 
+template<typename NamedType_>
+struct FunctionCallable;
+    
+template <typename T, typename Parameter, template<typename> class... Skills>
+struct FunctionCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, FunctionCallable>
+{
+    operator T () const
+    {
+        return this->underlying().get();
+    }
+    operator T&()
+    {
+        return this->underlying().get();
+    }
+};
+    
+template<typename NamedType_>
+struct MethodCallable;
+    
+template <typename T, typename Parameter, template<typename> class... Skills>
+struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, MethodCallable>
+{
+    T const* operator->() const { return std::addressof(this->underlying().get()); }
+    T* operator->() { return std::addressof(this->underlying().get()); }
+};
+
+template<typename NamedType_>
+struct Callable : FunctionCallable<NamedType_>, MethodCallable<NamedType_>{};
+    
 } // namespace fluent
 
 namespace std
@@ -76,6 +105,7 @@ struct hash<fluent::NamedTypeImpl<T, Parameter, Converter, Skills...>>
         return std::hash<T>()(x.get());
     }
 };
+
 }
     
 

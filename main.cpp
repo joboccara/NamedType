@@ -13,14 +13,12 @@ namespace
 namespace test
 {
 
-/*
 template<typename T>
 decltype(auto) tee(T&& value)
 {
     std::cout << value << '\n';
     return std::forward<T>(value);
 }
-*/
 
 using Meter = fluent::NamedType<double, struct MeterParameter, fluent::Addable, fluent::Comparable>;
 Meter operator"" _meter(unsigned long long value) { return Meter(value); }
@@ -256,6 +254,79 @@ bool testHash()
         && hashMap[cc33] == 30;
 }
 
+struct testFunctionCallable_A
+{
+    testFunctionCallable_A(int x) : x(x) {}
+    testFunctionCallable_A(testFunctionCallable_A const&) = delete; // ensures that passing the argument to a function doesn't make a copy
+    testFunctionCallable_A(testFunctionCallable_A&&) = default;
+    testFunctionCallable_A& operator+=(testFunctionCallable_A const& other) { x += other.x; return *this; }
+    int x;
+};
+    
+testFunctionCallable_A operator+(testFunctionCallable_A const& a1, testFunctionCallable_A const& a2)
+{
+    return testFunctionCallable_A(a1.x + a2.x);
+}
+    
+bool operator==(testFunctionCallable_A const& a1, testFunctionCallable_A const& a2)
+{
+    return a1.x == a2.x;
+}
+    
+bool testFunctionCallable()
+{
+    using A = testFunctionCallable_A;
+    auto functionTakingA = [](A const& a){ return a.x; };
+    
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::FunctionCallable>;
+    StrongA strongA(A(42));
+    return functionTakingA(strongA) == 42 && (strongA + strongA == 84);
+}
+
+bool testMethodCallable()
+{
+    class A
+    {
+    public:
+        A(int x) : x(x) {}
+        A(A const&) = delete; // ensures that invoking a method doesn't make a copy
+        A(A&&) = default;
+        
+        int method(){ return x; }
+        int constMethod() const{ return x; }
+    private:
+        int x;
+    };
+    
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::MethodCallable>;
+    StrongA strongA(A(42));
+    const StrongA constStrongA(A((42)));
+    return strongA->method() == 42 && constStrongA->constMethod() == 42;
+}
+
+bool testCallable()
+{
+    class A
+    {
+    public:
+        A(int x) : x(x) {}
+        A(A const&) = delete; // ensures that invoking a method or function doesn't make a copy
+        A(A&&) = default;
+        
+        int method(){ return x; }
+        int constMethod() const{ return x; }
+    private:
+        int x;
+    };
+    
+    auto functionTakingA = [](A const& a){ return a.constMethod(); };
+    
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::Callable>;
+    StrongA strongA(A(42));
+    const StrongA constStrongA(A((42)));
+    return functionTakingA(strongA) == 42 && strongA->method() == 42 && constStrongA->constMethod() == 42;
+}
+
 template <typename TestFunction>
 bool launchTest(std::string const& testName, TestFunction testFunction)
 {
@@ -287,6 +358,10 @@ void launchTests()
     success &= launchTest("convertible to itself", testConvertibleToItself);
     success &= launchTest("addable comparable convertible", testAddableComparableConvertible);
     success &= launchTest("hash", testHash);
+    success &= launchTest("function callable", testFunctionCallable);
+    success &= launchTest("method callable", testMethodCallable);
+    success &= launchTest("callable", testCallable);
+
     if (success)
         std::cout << "All tests PASSED\n";
 }
