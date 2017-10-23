@@ -280,7 +280,8 @@ bool testFunctionCallable()
     
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::FunctionCallable>;
     StrongA strongA(A(42));
-    return functionTakingA(strongA) == 42 && (strongA + strongA == 84);
+    const StrongA constStrongA(A(42));
+    return functionTakingA(strongA) == 42 && functionTakingA(constStrongA) == 42 && (strongA + strongA == 84);
 }
 
 bool testMethodCallable()
