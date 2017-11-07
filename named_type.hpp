@@ -25,7 +25,7 @@ public:
     // constructor
     explicit NamedTypeImpl(T const& value) : value_(value) {}
     template<typename T_ = T>
-    explicit NamedTypeImpl(T&& value, typename std::enable_if<!std::is_reference<T_>{}, std::nullptr_t>::type = nullptr) : value_(std::move(value)) {}
+    explicit NamedTypeImpl(T&& value, typename std::enable_if<!std::is_reference<T_>::value, std::nullptr_t>::type = nullptr) : value_(std::move(value)) {}
 
     // get
     T& get() { return value_; }
