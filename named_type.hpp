@@ -20,7 +20,10 @@ template <typename T, typename Parameter, typename Converter, template<typename>
 class NamedTypeImpl : public Skills<NamedTypeImpl<T, Parameter, Converter, Skills...>>...
 {
 public:
+    using UnderlyingType = T;
+
     // constructor
+	NamedTypeImpl() = default;
     explicit NamedTypeImpl(T const& value) : value_(value) {}
     template<typename T_ = T>
     explicit NamedTypeImpl(T&& value, typename std::enable_if<!std::is_reference<T_>::value, std::nullptr_t>::type = nullptr) : value_(std::move(value)) {}
@@ -29,8 +32,10 @@ public:
     T& get() { return value_; }
     T const& get() const {return value_; }
 
+    // explicit cast to underlying
+    explicit operator T() const { return value_; }
+
     // conversions
-    using UnderlyingType = T;
     template <typename Converter2>
     operator NamedTypeImpl<T, Parameter, Converter2, Skills...>() const
     {
@@ -51,7 +56,7 @@ public:
     };
 
 private:
-    T value_;
+	T value_{};
 };
 
 template <typename T, typename Parameter, template<typename> class... Skills>
@@ -68,7 +73,7 @@ StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);
 }
-    
+
 } // namespace fluent
 
 #endif
