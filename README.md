@@ -1,6 +1,6 @@
 A **strong type** is a type used in place of another type to carry specific **meaning** through its **name**.
 
-This project experiments with strong types in C++. All components are in the namespace `fluent`.
+This project experiments with strong types in C++. All components are in the namespace `fluent`. You can find a collection of blog posts explaining the rationale of the library and usages for strong types on [Fluent C++](https://www.fluentcpp.com/2016/12/08/strong-types-for-strong-interfaces/).
 
 ## Basic usage
 
@@ -8,7 +8,7 @@ It central piece is the templated class NamedType, which can be used to declare 
 
 ```cpp
 using Width = NamedType<double, struct WidthTag>;
-using Height = NamedType<double, struct WidthTag>;
+using Height = NamedType<double, struct HeightTag>;
 ```
 
 which can be used to make interfaces more expressive and more robust.
@@ -65,6 +65,11 @@ For instance, to inherit from operator+ and operator<<, you can declare the stro
 ```cpp
 using Meter = NamedType<double, MeterTag, Addable, Printable>
 ```
+
+There is one special skill, `FunctionCallable`, that lets the strong type be converted in the underlying type. This has the effect of removing the need to call .get() to get the underlying value. And `MethodCallable` enables `operator->` on the strong type to invoke methods on the underlying type.
+
+The skill `Callable` is the union of `FunctionCallable` and `MethodCallable`.
+
 
 ## Strong type conversions
 

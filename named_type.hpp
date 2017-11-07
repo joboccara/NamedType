@@ -20,6 +20,7 @@ template <typename T, typename Parameter, typename Converter, template<typename>
 class NamedTypeImpl : public Skills<NamedTypeImpl<T, Parameter, Converter, Skills...>>...
 {
 public:
+    using UnderlyingType = T;
 
     // constructor
     NamedTypeImpl() = default;
@@ -35,7 +36,6 @@ public:
     explicit operator T() const { return value_; }
 
     // conversions
-    using UnderlyingType = T;
     template <typename Converter2>
     operator NamedTypeImpl<T, Parameter, Converter2, Skills...>() const
     {
