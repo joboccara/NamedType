@@ -121,10 +121,30 @@ bool testMeterToKmWithDecimals()
     return distanceInKilometer(31234_meter) == 31.234;
 }
 
+bool testSubtractable()
+{
+    using SubtractableType = fluent::NamedType<int, struct SubtractableTag, fluent::Subtractable>;
+    SubtractableType s1(12);
+    SubtractableType s2(10);
+    return (s1 - s2).get() == 2;
+}
+    
+bool testMultiplicable()
+{
+    using MultiplicableType = fluent::NamedType<int, struct MultiplicableTag, fluent::Multiplicable>;
+    MultiplicableType s1(12);
+    MultiplicableType s2(10);
+    return (s1 * s2).get() == 120;
+}
+
 bool testComparable()
 {
     return 10_meter == 10_meter && !(10_meter == 11_meter)
-        && !(10_meter == 11_meter) && 10_meter !=  11_meter;
+        && 10_meter != 11_meter && !(10_meter != 10_meter)
+        && 10_meter <  11_meter && !(10_meter <  10_meter)
+        && 10_meter <= 10_meter &&   10_meter <= 11_meter && !(10_meter <= 9_meter)
+        && 11_meter >  10_meter && !(10_meter > 11_meter)
+        && 11_meter >= 10_meter &&   10_meter >= 10_meter && !(9_meter >= 10_meter);
 }
     
 bool testConvertibleWithOperator()
@@ -354,6 +374,8 @@ void launchTests()
     success &= launchTest("watt to dB", testWattToDb);
     success &= launchTest("meter to km with decimals", testMeterToKmWithDecimals);
     success &= launchTest("comparable", testComparable);
+    success &= launchTest("subtractable", testSubtractable);
+    success &= launchTest("multiplicable", testMultiplicable);
     success &= launchTest("convertible with operator", testConvertibleWithOperator);
     success &= launchTest("convertible with constructor", testConvertibleWithConstructor);
     success &= launchTest("convertible to itself", testConvertibleToItself);

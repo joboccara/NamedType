@@ -23,9 +23,25 @@ struct Addable : crtp<T, Addable>
 };
 
 template <typename T>
+struct Subtractable : crtp<T, Subtractable>
+{
+    T operator-(T const& other) const { return T(this->underlying().get() - other.get()); }
+};
+    
+template <typename T>
+struct Multiplicable : crtp<T, Multiplicable>
+{
+    T operator*(T const& other) const { return T(this->underlying().get() * other.get()); }
+};
+    
+template <typename T>
 struct Comparable : crtp<T, Comparable>
 {
-    bool operator==(T const& other) const { return this->underlying().get() == other.get(); }
+    bool operator<(T const& other) const  { return this->underlying().get() < other.get(); }
+    bool operator>(T const& other) const  { return other.get() < this->underlying().get(); }
+    bool operator<=(T const& other) const { return !(other.get() < this->underlying().get());}
+    bool operator>=(T const& other) const { return !(*this < other); }
+    bool operator==(T const& other) const { return !(*this < other) && !(other.get() < this->underlying().get()); }
     bool operator!=(T const& other) const { return !(*this == other); }
 };
 
