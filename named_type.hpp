@@ -15,6 +15,9 @@ struct Convert
     static T convertFrom(T t) { return from(t); }
     static T convertTo(T t) { return to(t); }
 };
+    
+template<typename T>
+using IsReference = typename std::enable_if<!std::is_reference<T>{}, void>::type;
 
 template <typename T, typename Parameter, typename Converter, template<typename> class... Skills>
 class NamedTypeImpl : public Skills<NamedTypeImpl<T, Parameter, Converter, Skills...>>...
@@ -24,8 +27,8 @@ public:
 
     // constructor
     explicit NamedTypeImpl(T const& value) : value_(value) {}
-    template<typename T_ = T>
-    explicit NamedTypeImpl(T&& value, typename std::enable_if<!std::is_reference<T_>{}, std::nullptr_t>::type = nullptr) : value_(std::move(value)) {}
+    template<typename T_ = T, typename = IsReference<T_>>
+    explicit NamedTypeImpl(T&& value) : value_(std::move(value)) {}
 
     // get
     T& get() { return value_; }
