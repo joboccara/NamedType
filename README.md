@@ -8,7 +8,7 @@ It central piece is the templated class NamedType, which can be used to declare 
 
 ```cpp
 using Width = NamedType<double, struct WidthTag>;
-using Height = NamedType<double, struct WidthTag>;
+using Height = NamedType<double, struct HeightTag>;
 ```
 
 which can be used to make interfaces more expressive and more robust.
@@ -66,7 +66,7 @@ For instance, to inherit from operator+ and operator<<, you can declare the stro
 using Meter = NamedType<double, MeterTag, Addable, Printable>
 ```
 
-There is one special skill, `FunctionCallable`, that lets the strong type be converted in the underlying type. This has the effect of removing the need to call .get() to get the underlying value. And `MethodCallable` enables `operator->` on the strong type to invoke methods on the underlying tpe.
+There is one special skill, `FunctionCallable`, that lets the strong type be converted in the underlying type. This has the effect of removing the need to call .get() to get the underlying value. And `MethodCallable` enables `operator->` on the strong type to invoke methods on the underlying type.
 
 The skill `Callable` is the union of `FunctionCallable` and `MethodCallable`.
 
