@@ -17,7 +17,7 @@ struct Convert
 };
     
 template<typename T>
-using IsReference = typename std::enable_if<!std::is_reference<T>{}, void>::type;
+using IsNotReference = typename std::enable_if<!std::is_reference<T>::value, void>::type;
 
 template <typename T, typename Parameter, typename Converter, template<typename> class... Skills>
 class NamedTypeImpl : public Skills<NamedTypeImpl<T, Parameter, Converter, Skills...>>...
@@ -27,7 +27,7 @@ public:
 
     // constructor
     explicit NamedTypeImpl(T const& value) : value_(value) {}
-    template<typename T_ = T, typename = IsReference<T_>>
+    template<typename T_ = T, typename = IsNotReference<T_>>
     explicit NamedTypeImpl(T&& value) : value_(std::move(value)) {}
 
     // get
