@@ -66,6 +66,30 @@ TEST_CASE("Passing a strong reference")
     REQUIRE(value == "value2");
 }
 
+TEST_CASE("Construction of NamedType::ref from the underlying type")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
+    auto addOne = [](StrongInt::ref si) { ++(si.get()); };
+    
+    int i = 42;
+    addOne(StrongInt::ref(i));
+    REQUIRE(i == 43);
+}
+
+TEST_CASE("Implicit conversion of NamedType to NamedType::ref")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
+    auto addOne = [](StrongInt::ref si) { ++(si.get()); };
+    
+    StrongInt i(42);
+    addOne(i);
+    REQUIRE(i.get() == 43);
+
+    StrongInt j(42);
+    addOne(StrongInt::ref(j));
+    REQUIRE(j.get() == 43);
+}
+
 template<typename Function>
 using Comparator = fluent::NamedType<Function, struct ComparatorParameter>;
 

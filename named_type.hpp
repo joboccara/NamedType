@@ -35,6 +35,11 @@ public:
     T const& get() const {return value_; }
 
     // conversions
+    using ref = NamedTypeImpl<T&, Parameter, Converter, Skills...>;
+    operator ref ()
+    {
+        return ref(value_);
+    }
     template <typename Converter2>
     operator NamedTypeImpl<T, Parameter, Converter2, Skills...>() const
     {
