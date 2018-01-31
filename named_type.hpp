@@ -58,6 +58,20 @@ public:
         template <typename Converter2>
         using GetConvertible = NamedTypeImpl<T, Parameter, ComposeConverter<Converter, Converter2>, Skills...>;
     };
+    
+    struct argument
+    {
+        template<typename U>
+        NamedTypeImpl operator=(U&& value) const
+        {
+            return NamedTypeImpl(std::forward<U>(value));
+        }
+        argument() = default;
+        argument(argument const&) = delete;
+        argument(argument &&) = delete;
+        argument& operator=(argument const&) = delete;
+        argument& operator=(argument &&) = delete;
+    };
 
 private:
     T value_;

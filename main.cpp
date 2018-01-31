@@ -383,3 +383,19 @@ TEST_CASE("Callable")
     REQUIRE(strongA->method() == 42);
     REQUIRE(constStrongA->constMethod() == 42);
 }
+
+TEST_CASE("Named arguments")
+{
+    using FirstName = fluent::NamedType<std::string, struct FirstNameTag>;
+    using LastName = fluent::NamedType<std::string, struct LastNameTag>;
+    static const FirstName::argument firstName;
+    static const LastName::argument lastName;
+    auto getFullName = [](FirstName const& firstName, LastName const& lastName)
+    {
+        return firstName.get() + lastName.get();
+    };
+    
+    auto fullName = getFullName(firstName = "James", lastName = "Bond");
+    REQUIRE(fullName == "JamesBond");
+}
+

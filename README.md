@@ -70,6 +70,31 @@ There is one special skill, `FunctionCallable`, that lets the strong type be con
 
 The skill `Callable` is the union of `FunctionCallable` and `MethodCallable`.
 
+## Named arguments
+By their nature strong types can play the role of named parameters:
+```cpp
+using FirstName = NamedType<std::string, struct FirstNameTag>;
+using LastName = NamedType<std::string, struct LastNameTag>;
+
+void displayName(FirstName const& theFirstName, LastName const& theLastName);
+
+// Call site
+displayName(FirstName("John"), LastName("Doe"));
+```
+But he nested type `argument` allows to emulate a named argument syntax:
+```cpp
+using FirstName = NamedType<std::string, struct FirstNameTag>;
+using LastName = NamedType<std::string, struct LastNameTag>;
+
+static const FirstName::argument firstName;
+static const LastName::argument lastName;
+
+void displayName(FirstName const& theFirstName, LastName const& theLastName);
+
+// Call site
+displayName(firstName = "John", lastName = "Doe");
+```
+
 
 ## Strong type conversions
 
