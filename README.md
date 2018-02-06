@@ -81,7 +81,7 @@ void displayName(FirstName const& theFirstName, LastName const& theLastName);
 // Call site
 displayName(FirstName("John"), LastName("Doe"));
 ```
-But he nested type `argument` allows to emulate a named argument syntax:
+But the nested type `argument` allows to emulate a named argument syntax:
 ```cpp
 using FirstName = NamedType<std::string, struct FirstNameTag>;
 using LastName = NamedType<std::string, struct LastNameTag>;
