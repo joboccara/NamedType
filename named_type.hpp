@@ -26,6 +26,7 @@ public:
     using UnderlyingType = T;
 
     // constructor
+    NamedTypeImpl() = default;
     explicit NamedTypeImpl(T const& value) : value_(value) {}
     template<typename T_ = T, typename = IsNotReference<T_>>
     explicit NamedTypeImpl(T&& value) : value_(std::move(value)) {}
@@ -33,6 +34,9 @@ public:
     // get
     T& get() { return value_; }
     T const& get() const {return value_; }
+
+    // explicit cast to underlying
+    explicit operator T() const { return value_; }
 
     // conversions
     using ref = NamedTypeImpl<T&, Parameter, Converter, Skills...>;
@@ -74,7 +78,7 @@ public:
     };
 
 private:
-    T value_;
+    T value_{};
 };
 
 template <typename T, typename Parameter, template<typename> class... Skills>
@@ -91,7 +95,7 @@ StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);
 }
-    
+
 } // namespace fluent
 
 #endif
