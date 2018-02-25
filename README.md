@@ -95,28 +95,4 @@ void displayName(FirstName const& theFirstName, LastName const& theLastName);
 displayName(firstName = "John", lastName = "Doe");
 ```
 
-
-## Strong type conversions
-
-Especially relevant for units, you can declare a strong type being a multiple of another one, with any std::ratio:
-
-```cpp
-using Meter = NamedType<double, MeterTag, Addable, Printable>
-using KiloMeter = MultipleOf<Meter, std::kilo>
-```
-
-Or with a non-linear conversion:
-
-```cpp
-using Watt = NamedType<double, struct WattTag>;
-
-struct ConvertDBFromAndToWatt
-{
-    static double convertFrom(double watt) { return 10 * log(watt) / log(10); }
-    static double convertTo(double db) { return pow(10, db / 10); }
-};
-
-using dB = ConvertibleTo<Watt, ConvertDBFromAndToWatt>;
-```
-
 You can have a look at main.cpp for usage examples.

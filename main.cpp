@@ -22,14 +22,6 @@ using Meter = fluent::NamedType<double, struct MeterParameter, fluent::Addable, 
 Meter operator"" _meter(unsigned long long value) { return Meter(value); }
 //Meter operator"" _meter(long double value) { return Meter(value); }
 
-using Kilometer = fluent::MultipleOf<Meter, std::ratio<1000>>;
-Kilometer operator"" _kilometer(unsigned long long value) { return Kilometer(value); }
-Kilometer operator"" _kilometer(long double value) { return Kilometer(value); }
-
-using Millimeter = fluent::MultipleOf<Meter, std::milli>;
-
-using Centimeter = fluent::MultipleOf<Millimeter, std::ratio<10>>;
-
 using Width = fluent::NamedType<Meter, struct WidthParameter>;
 using Height = fluent::NamedType<Meter, struct HeightParameter>;
 
@@ -104,46 +96,14 @@ TEST_CASE("Strong generic type")
     REQUIRE(performAction(fluent::make_named<Comparator>([](){ return std::string("compare"); })) == "compare");
 }
 
-double distanceInKilometer(Kilometer d)
+TEST_CASE("Addable")
 {
-    return d.get();
+    using AddableType = fluent::NamedType<int, struct SubtractableTag, fluent::Addable>;
+    AddableType s1(12);
+    AddableType s2(10);
+    REQUIRE((s1 + s2).get() == 22);
 }
 
-TEST_CASE("Meter to km")
-{
-    REQUIRE(distanceInKilometer(31000_meter) == 31);
-}
-
-double distanceInMeter(Meter d)
-{
-    return d.get();
-}
-
-TEST_CASE("Km to meter")
-{
-    REQUIRE(distanceInMeter(31_kilometer) == 31000);
-}
-
-double distanceInMillimeter(Millimeter d)
-{
-    return d.get();
-}
-
-TEST_CASE("Km to millimeter")
-{
-    REQUIRE(distanceInMillimeter(31_kilometer) == 31000000);
-}
-
-TEST_CASE("Cm to meter")
-{
-    REQUIRE(distanceInMeter(Centimeter(31)) == 0.31);
-}
-
-TEST_CASE("MeterToKmWithDecimals")
-{
-    REQUIRE(distanceInKilometer(31234_meter) == 31.234);
-}
-    
 TEST_CASE("Subtractable")
 {
     using SubtractableType = fluent::NamedType<int, struct SubtractableTag, fluent::Subtractable>;
@@ -151,7 +111,7 @@ TEST_CASE("Subtractable")
     SubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
 }
-    
+
 TEST_CASE("Multiplicable")
 {
     using MultiplicableType = fluent::NamedType<int, struct MultiplicableTag, fluent::Multiplicable>;
@@ -227,72 +187,6 @@ TEST_CASE("ConvertibleToItself")
     REQUIRE(i == 42);
 }
     
-TEST_CASE("AddableComparableConvertible")
-{
-    REQUIRE((1_kilometer + 200_meter == 1200_meter));
-    REQUIRE((1_kilometer + 200_meter == 1.2_kilometer));
-}
-
-struct ConvertMileFromAndToKilometer
-{
-    static double convertFrom(double kilometer) { return kilometer / 1.609; }
-    static double convertTo(double mile) { return mile * 1.609; }
-};
-
-using Mile = fluent::ConvertibleTo<Kilometer, ConvertMileFromAndToKilometer>;
-Mile operator"" _mile(unsigned long long mile) { return Mile(mile); }
-
-TEST_CASE("Mile to km")
-{
-    REQUIRE(distanceInKilometer(2_mile) == 2 * 1.609);
-}
-
-TEST_CASE("Mile to meter")
-{
-    REQUIRE(distanceInMeter(2_mile) == 2 * 1000 * 1.609);
-}
-
-double distanceInMile(Mile d)
-{
-    return d.get();
-}
-
-TEST_CASE("Km to mile")
-{
-    REQUIRE(distanceInMile(2_kilometer) == 2 / 1.609);
-}
-
-using Watt = fluent::NamedType<double, struct WattTag>;
-Watt operator"" _watt(unsigned long long watt) { return Watt(watt); }
-
-struct ConvertDBFromAndToWatt
-{
-    static double convertFrom(double watt) { return 10 * log(watt) / log(10); }
-    static double convertTo(double db) { return pow(10, db / 10); }
-};
-using dB = fluent::ConvertibleTo<Watt, ConvertDBFromAndToWatt>;
-dB operator"" _dB(long double db) { return dB(db); }
-
-double powerInDb(dB power)
-{
-    return power.get();
-}
-
-TEST_CASE("Watt to dB")
-{
-    REQUIRE(std::abs(powerInDb(230_watt) - 23.617) < 10e-2);
-}
-
-double powerInWatt(Watt power)
-{
-    return power.get();
-}
-
-TEST_CASE("dB to watt")
-{
-    REQUIRE(std::abs(powerInWatt(25.6_dB) - 363.078) < 10e-2);
-}
-
 TEST_CASE("Hash")
 {
     using SerialNumber = fluent::NamedType<std::string, struct SerialNumberTag, fluent::Comparable, fluent::Hashable>;

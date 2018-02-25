@@ -2,7 +2,7 @@
 #define UNDERLYING_FUNCTIONALITIES_HPP
 
 #include "crtp.hpp"
-#include "named_type.fwd.hpp"
+#include "named_type_impl.hpp"
 
 #include <iostream>
 #include <memory>
@@ -110,13 +110,13 @@ struct Callable : FunctionCallable<NamedType_>, MethodCallable<NamedType_>{};
 
 namespace std
 {
-template <typename T, typename Parameter, typename Converter, template<typename> class... Skills>
-struct hash<fluent::NamedTypeImpl<T, Parameter, Converter, Skills...>>
+template <typename T, typename Parameter, template<typename> class... Skills>
+struct hash<fluent::NamedType<T, Parameter, Skills...>>
 {
-    using NamedType = fluent::NamedTypeImpl<T, Parameter, Converter, Skills...>;
+    using NamedType = fluent::NamedType<T, Parameter, Skills...>;
     using checkIfHashable = typename std::enable_if<NamedType::is_hashable, void>::type;
     
-    size_t operator()(fluent::NamedTypeImpl<T, Parameter, Converter, Skills...> const& x) const
+    size_t operator()(fluent::NamedType<T, Parameter, Skills...> const& x) const
     {
         return std::hash<T>()(x.get());
     }
