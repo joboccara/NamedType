@@ -4,6 +4,7 @@
 #include "crtp.hpp"
 #include "named_type_impl.hpp"
 
+#include <functional>
 #include <iostream>
 #include <memory>
 

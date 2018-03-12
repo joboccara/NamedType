@@ -1,7 +1,6 @@
 #ifndef named_type_impl_h
 #define named_type_impl_h
 
-#include <functional>
 #include <type_traits>
 
 namespace fluent
