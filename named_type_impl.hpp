@@ -16,14 +16,14 @@ public:
     using UnderlyingType = T;
     
     // constructor
-    explicit NamedType(T const& value) : value_(value) {}
+    explicit constexpr NamedType(T const& value) : value_(value) {}
     template<typename T_ = T, typename = IsNotReference<T_>>
-    explicit NamedType(T&& value) : value_(std::move(value)) {}
+    explicit constexpr NamedType(T&& value) : value_(std::move(value)) {}
     
     // get
-    T& get() { return value_; }
-    T const& get() const {return value_; }
-    
+    constexpr T& get() { return value_; }
+    constexpr T const& get() const {return value_; }
+
     // conversions
     using ref = NamedType<T&, Parameter, Skills...>;
     operator ref ()
@@ -50,7 +50,7 @@ private:
 };
 
 template<template<typename T> class StrongType, typename T>
-StrongType<T> make_named(T const& value)
+constexpr StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);
 }
