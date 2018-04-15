@@ -3,6 +3,13 @@
 
 #include <type_traits>
 
+// Enable empty base class optimization with multiple inheritance on Visual Studio.
+#if defined(_MSC_VER) && _MSC_VER >= 1910
+#  define FLUENT_EBCO __declspec(empty_bases)
+#else
+#  define FLUENT_EBCO
+#endif
+
 namespace fluent
 {
     
@@ -10,7 +17,7 @@ template<typename T>
 using IsNotReference = typename std::enable_if<!std::is_reference<T>::value, void>::type;
 
 template <typename T, typename Parameter, template<typename> class... Skills>
-class NamedType : public Skills<NamedType<T, Parameter, Skills...>>...
+class FLUENT_EBCO NamedType : public Skills<NamedType<T, Parameter, Skills...>>...
 {
 public:
     using UnderlyingType = T;

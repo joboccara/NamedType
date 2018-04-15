@@ -293,3 +293,7 @@ TEST_CASE("Named arguments")
     REQUIRE(fullName == "JamesBond");
 }
 
+TEST_CASE("Empty base class optimization")
+{
+    REQUIRE(sizeof(Meter) == sizeof(double));
+}
