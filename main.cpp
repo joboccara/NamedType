@@ -120,6 +120,13 @@ TEST_CASE("Multiplicable")
     REQUIRE((s1 * s2).get() == 120);
 }
 
+TEST_CASE("Negatable")
+{
+  using NegatableType = fluent::NamedType<int, struct NegatableTag, fluent::Negatable>;
+  NegatableType value(10);
+  REQUIRE((-value).get() == -10);
+}
+
 TEST_CASE("Comparable")
 {
     REQUIRE((10_meter == 10_meter));
