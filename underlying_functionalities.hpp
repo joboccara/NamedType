@@ -40,6 +40,12 @@ struct Multiplicable : crtp<T, Multiplicable>
 {
     T operator*(T const& other) const { return T(this->underlying().get() * other.get()); }
 };
+
+template <typename T>
+struct Negatable : crtp<T, Negatable>
+{
+    T operator-() const { return T(-this->underlying().get()); }
+};
     
 template <typename T>
 struct Comparable : crtp<T, Comparable>
