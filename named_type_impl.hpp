@@ -29,7 +29,7 @@ public:
     
     // get
     constexpr T& get() { return value_; }
-    constexpr T const& get() const {return value_; }
+    constexpr std::remove_reference_t<T> const& get() const {return value_; }
 
     // conversions
     using ref = NamedType<T&, Parameter, Skills...>;
