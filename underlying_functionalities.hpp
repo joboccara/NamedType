@@ -52,9 +52,9 @@ struct Comparable : crtp<T, Comparable>
 {
     bool operator<(T const& other) const  { return this->underlying().get() < other.get(); }
     bool operator>(T const& other) const  { return other.get() < this->underlying().get(); }
-    bool operator<=(T const& other) const { return !(other.get() < this->underlying().get());}
+    bool operator<=(T const& other) const { return !(*this > other); }
     bool operator>=(T const& other) const { return !(*this < other); }
-    bool operator==(T const& other) const { return !(*this < other) && !(other.get() < this->underlying().get()); }
+    bool operator==(T const& other) const { return !(*this < other || *this > other); }
     bool operator!=(T const& other) const { return !(*this == other); }
 };
 
