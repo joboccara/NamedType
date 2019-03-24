@@ -158,6 +158,16 @@ TEST_CASE("BitWiseInvertable")
     CHECK((~s1).get() == (~13));
 }
 
+TEST_CASE("BitWiseAndable")
+{
+    using BitWiseAndableType = fluent::NamedType<int, struct BitWiseAndableTag, fluent::BitWiseAndable>;
+    BitWiseAndableType s1(2);
+    BitWiseAndableType s2(64);
+    CHECK((s1 & s2).get() == (2 & 64));
+    s1 &= s2;
+    CHECK(s1.get() == (2 & 64));
+}
+
 TEST_CASE("Comparable")
 {
     REQUIRE((10_meter == 10_meter));
