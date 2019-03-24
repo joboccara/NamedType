@@ -141,6 +141,16 @@ TEST_CASE("Negatable")
   REQUIRE((-value).get() == -10);
 }
 
+TEST_CASE("Modulable")
+{
+    using ModulableType = fluent::NamedType<int, struct ModulableTag, fluent::Modulable>;
+    ModulableType s1(5);
+    ModulableType s2(2);
+    CHECK((s1 % s2).get() == 1);
+    s1 %= s2;
+    CHECK(s1.get() == 1);
+}
+
 TEST_CASE("Comparable")
 {
     REQUIRE((10_meter == 10_meter));
