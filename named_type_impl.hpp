@@ -13,7 +13,7 @@
 
 namespace fluent
 {
-    
+
 template<typename T>
 using IsNotReference = typename std::enable_if<!std::is_reference<T>::value, void>::type;
 
@@ -22,12 +22,12 @@ class FLUENT_EBCO NamedType : public Skills<NamedType<T, Parameter, Skills...>>.
 {
 public:
     using UnderlyingType = T;
-    
+
     // constructor
     explicit constexpr NamedType(T const& value) : value_(value) {}
     template<typename T_ = T, typename = IsNotReference<T_>>
     explicit constexpr NamedType(T&& value) : value_(std::move(value)) {}
-    
+
     // get
     constexpr T& get() { return value_; }
     constexpr std::remove_reference_t<T> const& get() const {return value_; }
@@ -38,7 +38,7 @@ public:
     {
         return ref(value_);
     }
-    
+
     struct argument
     {
         template<typename U>
@@ -52,7 +52,7 @@ public:
         argument& operator=(argument const&) = delete;
         argument& operator=(argument &&) = delete;
     };
-    
+
 private:
     T value_;
 };
@@ -62,7 +62,7 @@ constexpr StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);
 }
-    
+
 } // namespace fluent
 
 #endif /* named_type_impl_h */

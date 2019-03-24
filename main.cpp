@@ -62,7 +62,7 @@ TEST_CASE("Construction of NamedType::ref from the underlying type")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
     auto addOne = [](StrongInt::ref si) { ++(si.get()); };
-    
+
     int i = 42;
     addOne(StrongInt::ref(i));
     REQUIRE(i == 43);
@@ -72,7 +72,7 @@ TEST_CASE("Implicit conversion of NamedType to NamedType::ref")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
     auto addOne = [](StrongInt::ref si) { ++(si.get()); };
-    
+
     StrongInt i(42);
     addOne(i);
     REQUIRE(i.get() == 43);
@@ -152,14 +152,14 @@ TEST_CASE("ConvertibleWithOperator")
         B(int x) : x(x) {}
         int x;
     };
-    
+
     struct A
     {
         A(int x) : x(x) {}
         operator B () const { return B(x);}
         int x;
     };
-        
+
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::ImplicitlyConvertibleTo<B>::templ>;
     StrongA strongA(A(42));
     B b = strongA;
@@ -173,19 +173,19 @@ TEST_CASE("ConvertibleWithConstructor")
         A(int x) : x(x) {}
         int x;
     };
-        
+
     struct B
     {
         B(A a) : x(a.x) {}
         int x;
     };
-        
+
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::ImplicitlyConvertibleTo<B>::templ>;
     StrongA strongA(A(42));
     B b = strongA;
     REQUIRE(b.x == 42);
 }
-    
+
 TEST_CASE("ConvertibleToItself")
 {
     using MyInt = fluent::NamedType<int, struct MyIntTag, fluent::ImplicitlyConvertibleTo<int>::templ>;
@@ -193,7 +193,7 @@ TEST_CASE("ConvertibleToItself")
     int i = myInt;
     REQUIRE(i == 42);
 }
-    
+
 TEST_CASE("Hash")
 {
     using SerialNumber = fluent::NamedType<std::string, struct SerialNumberTag, fluent::Comparable, fluent::Hashable>;
@@ -214,12 +214,12 @@ struct testFunctionCallable_A
     testFunctionCallable_A& operator+=(testFunctionCallable_A const& other) { x += other.x; return *this; }
     int x;
 };
-    
+
 testFunctionCallable_A operator+(testFunctionCallable_A const& a1, testFunctionCallable_A const& a2)
 {
     return testFunctionCallable_A(a1.x + a2.x);
 }
-    
+
 bool operator==(testFunctionCallable_A const& a1, testFunctionCallable_A const& a2)
 {
     return a1.x == a2.x;
@@ -229,7 +229,7 @@ TEST_CASE("Function callable")
 {
     using A = testFunctionCallable_A;
     auto functionTakingA = [](A const& a){ return a.x; };
-    
+
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::FunctionCallable>;
     StrongA strongA(A(42));
     const StrongA constStrongA(A(42));
@@ -246,13 +246,13 @@ TEST_CASE("Method callable")
         A(int x) : x(x) {}
         A(A const&) = delete; // ensures that invoking a method doesn't make a copy
         A(A&&) = default;
-        
+
         int method(){ return x; }
         int constMethod() const{ return x; }
     private:
         int x;
     };
-    
+
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::MethodCallable>;
     StrongA strongA(A(42));
     const StrongA constStrongA(A((42)));
@@ -268,15 +268,15 @@ TEST_CASE("Callable")
         A(int x) : x(x) {}
         A(A const&) = delete; // ensures that invoking a method or function doesn't make a copy
         A(A&&) = default;
-        
+
         int method(){ return x; }
         int constMethod() const{ return x; }
     private:
         int x;
     };
-    
+
     auto functionTakingA = [](A const& a){ return a.constMethod(); };
-    
+
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::Callable>;
     StrongA strongA(A(42));
     const StrongA constStrongA(A((42)));
@@ -295,7 +295,7 @@ TEST_CASE("Named arguments")
     {
         return firstName.get() + lastName.get();
     };
-    
+
     auto fullName = getFullName(firstName = "James", lastName = "Bond");
     REQUIRE(fullName == "JamesBond");
 }
