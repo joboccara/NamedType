@@ -110,7 +110,7 @@ TEST_CASE("Subtractable")
     SubtractableType s1(12);
     SubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
-    s1 -= s1;
+    s1 -= s2;
     REQUIRE(s1.get() == 2);
 }
 
