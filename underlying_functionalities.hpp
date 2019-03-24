@@ -100,6 +100,18 @@ struct BitWiseInvertable : crtp<T, BitWiseInvertable>
 {
     T operator~() const { return T(~this->underlying().get()); }
 };
+
+template <typename T>
+struct BitWiseAndable : crtp<T, BitWiseAndable>
+{
+    T  operator&(T const& other) const { return T(this->underlying().get() & other.get()); }
+    T& operator&=(T const& other)
+    {
+        this->underlying().get() &= other.get();
+        return this->underlying();
+    }
+};
+
 template <typename T>
 struct Negatable : crtp<T, Negatable>
 {
@@ -190,6 +202,7 @@ struct Arithmetic : Incrementable<T>,
                     Divisible<T>,
                     Modulable<T>,
                     BitWiseInvertable<T>,
+                    BitWiseAndable<T>,
                     Negatable<T>,
                     Comparable<T>,
                     Printable<T>,
