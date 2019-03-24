@@ -24,13 +24,13 @@ public:
     using UnderlyingType = T;
 
     // constructor
-    explicit constexpr NamedType(T const& value) : value_(value) {}
+    explicit constexpr NamedType(T const& value) : value_(value) noexcept(noexcept(T(value))) {}
     template<typename T_ = T, typename = IsNotReference<T_>>
-    explicit constexpr NamedType(T&& value) : value_(std::move(value)) {}
+    explicit constexpr NamedType(T&& value) : value_(std::move(value)) noexcept(noexcept(T(std::move(value)))) {}
 
     // get
-    constexpr T& get() { return value_; }
-    constexpr std::remove_reference_t<T> const& get() const {return value_; }
+    constexpr T& get() noexcept { return value_; }
+    constexpr std::remove_reference_t<T> const& get() const noexcept {return value_; }
 
     // conversions
     using ref = NamedType<T&, Parameter, Skills...>;
