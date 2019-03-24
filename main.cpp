@@ -121,7 +121,7 @@ TEST_CASE("Multiplicable")
     MultiplicableType s2(10);
     REQUIRE((s1 * s2).get() == 120);
     s1 *= s2;
-    REQUIRE(s1.get(), 120);
+    REQUIRE(s1.get() == 120);
 }
 
 TEST_CASE("Divisible")
@@ -131,7 +131,7 @@ TEST_CASE("Divisible")
     DivisibleType s2(10);
     REQUIRE((s1 / s2).get(), 12);
     s1 /= s2;
-    REQUIRE(s1.get(), 12);
+    REQUIRE(s1.get() == 12);
 }
 
 TEST_CASE("Negatable")
@@ -363,7 +363,7 @@ TEST_CASE("Arithmetic")
     a += b;
     CHECK(a.get() == 3);
 
-    CHECK((a - b).get(), 1);
+    CHECK((a - b).get() == 1);
 
     a -= b;
     CHECK(a.get() == 1);
