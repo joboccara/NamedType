@@ -151,6 +151,13 @@ TEST_CASE("Modulable")
     CHECK(s1.get() == 1);
 }
 
+TEST_CASE("BitWiseInvertable")
+{
+    using BitWiseInvertableType = fluent::NamedType<int, struct BitWiseInvertableTag, fluent::BitWiseInvertable>;
+    BitWiseInvertableType s1(13);
+    CHECK((~s1).get() == (~13));
+}
+
 TEST_CASE("Comparable")
 {
     REQUIRE((10_meter == 10_meter));
