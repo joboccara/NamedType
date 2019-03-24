@@ -188,6 +188,16 @@ TEST_CASE("BitWiseXorable")
     CHECK(s1.get() == (2 ^ 64));
 }
 
+TEST_CASE("BitWiseLeftShiftable")
+{
+    using BitWiseLeftShiftableType = fluent::NamedType<int, struct BitWiseLeftShiftableTag, fluent::BitWiseLeftShiftable>;
+    BitWiseLeftShiftableType s1(2);
+    BitWiseLeftShiftableType s2(3);
+    CHECK((s1 << s2).get() == (2 << 3));
+    s1 <<= s2;
+    CHECK(s1.get() == (2 << 3));
+}
+
 TEST_CASE("Comparable")
 {
     REQUIRE((10_meter == 10_meter));
