@@ -30,6 +30,22 @@ struct PostIncrementable : crtp<T, PostIncrementable>
 };
 
 template <typename T>
+struct PreDecrementable : crtp<T, PreDecrementable>
+{
+    T& operator--()
+    {
+        --this->underlying().get();
+        return this->underlying();
+    }
+};
+
+template <typename T>
+struct PostDecrementable : crtp<T, PostDecrementable>
+{
+    T operator--(int) { return this->underlying().get()--; }
+};
+
+template <typename T>
 struct Addable : crtp<T, Addable>
 {
     T operator+(T const& other) const { return T(this->underlying().get() + other.get()); }
@@ -150,6 +166,8 @@ template <typename T>
 struct Arithmetic : Incrementable<T>,
                     PreIncrementable<T>,
                     PostIncrementable<T>,
+                    PreDecrementable<T>,
+                    PostDecrementable<T>,
                     Addable<T>,
                     Subtractable<T>,
                     Multiplicable<T>,
