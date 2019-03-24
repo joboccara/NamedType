@@ -50,6 +50,11 @@ template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
 {
     T operator*(T const& other) const { return T(this->underlying().get() * other.get()); }
+    T& operator*=(T const& other)
+    {
+        this->underlying().get() *= other.get();
+        return this->underlying();
+    }
 };
 
 template <typename T>
