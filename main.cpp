@@ -98,7 +98,7 @@ TEST_CASE("Strong generic type")
 
 TEST_CASE("Addable")
 {
-    using AddableType = fluent::NamedType<int, struct SubtractableTag, fluent::Addable>;
+    using AddableType = fluent::NamedType<int, struct AddableTag, fluent::Addable>;
     AddableType s1(12);
     AddableType s2(10);
     REQUIRE((s1 + s2).get() == 22);
@@ -110,6 +110,8 @@ TEST_CASE("Subtractable")
     SubtractableType s1(12);
     SubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
+    s1 -= s1;
+    REQUIRE(s1.get() == 2);
 }
 
 TEST_CASE("Multiplicable")
@@ -118,6 +120,18 @@ TEST_CASE("Multiplicable")
     MultiplicableType s1(12);
     MultiplicableType s2(10);
     REQUIRE((s1 * s2).get() == 120);
+    s1 *= s2;
+    REQUIRE(s1.get(), 120);
+}
+
+TEST_CASE("Divisible")
+{
+    using DivisibleType = fluent::NamedType<int, struct DivisibleTag, fluent::Divisible>;
+    DivisibleType s1(120);
+    DivisibleType s2(10);
+    REQUIRE((s1 / s2).get(), 12);
+    s1 /= s2;
+    REQUIRE(s1.get(), 12);
 }
 
 TEST_CASE("Negatable")
@@ -303,4 +317,65 @@ TEST_CASE("Named arguments")
 TEST_CASE("Empty base class optimization")
 {
     REQUIRE(sizeof(Meter) == sizeof(double));
+}
+
+using strong_int = fluent::NamedType<int, struct IntTag>;
+
+TEST_CASE("Default constructible")
+{
+    strong_int i1;
+    strong_int i2{};
+}
+
+TEST_CASE("constexpr")
+{
+    using strong_bool = fluent::NamedType<bool, struct BoolTag>;
+
+    static_assert(strong_bool{ true }.get());
+}
+
+struct throw_on_construction
+{
+    throw_on_construction() { throw 42; }
+
+    throw_on_construction(int) { throw "exception"; }
+};
+
+using C = fluent::NamedType<throw_on_construction, struct throwTag>;
+
+TEST_CASE("noexcept")
+{
+    CHECK(noexcept(strong_int{}));
+    CHECK(!noexcept(C{}));
+
+    CHECK(noexcept(strong_int(3)));
+    CHECK(!noexcept(C{5}));
+}
+
+TEST_CASE("Arithmetic")
+{
+    using strong_arithmetic = fluent::NamedType<int, struct ArithmeticTag, fluent::Arithmetic>;
+    strong_arithmetic a{ 1 };
+    strong_arithmetic b{ 2 };
+
+    CHECK((a + b).get() == 3);
+
+    a += b;
+    CHECK(a.get() == 3);
+
+    CHECK((a - b).get(), 1);
+
+    a -= b;
+    CHECK(a.get() == 1);
+
+    a.get() = 5;
+    CHECK((a * b).get() == 10);
+
+    a *= b;
+    CHECK(a.get() == 10);
+
+    CHECK((a / b).get() == 5);
+
+    a /= b;
+    CHECK(a.get() == 5);
 }
