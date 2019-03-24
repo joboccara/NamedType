@@ -26,9 +26,9 @@ public:
     // constructor
     template <typename T_ = T, typename = std::enable_if<std::is_default_constructible<T>::value, void>>
     constexpr NamedType() noexcept(noexcept(T())) {}
-    explicit constexpr NamedType(T const& value) : value_(value) noexcept(noexcept(T(value))) {}
+    explicit constexpr NamedType(T const& value) noexcept(noexcept(T(value))) : value_(value) {}
     template<typename T_ = T, typename = IsNotReference<T_>>
-    explicit constexpr NamedType(T&& value) : value_(std::move(value)) noexcept(noexcept(T(std::move(value)))) {}
+    explicit constexpr NamedType(T&& value) noexcept(noexcept(T(std::move(value)))) : value_(std::move(value)) {}
 
     // get
     [[nodiscard]] constexpr T& get() noexcept { return value_; }
