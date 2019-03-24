@@ -31,8 +31,8 @@ public:
     explicit constexpr NamedType(T&& value) : value_(std::move(value)) noexcept(noexcept(T(std::move(value)))) {}
 
     // get
-    constexpr T& get() noexcept { return value_; }
-    constexpr std::remove_reference_t<T> const& get() const noexcept {return value_; }
+    [[nodiscard]] constexpr T& get() noexcept { return value_; }
+    [[nodiscard]] constexpr std::remove_reference_t<T> const& get() const noexcept {return value_; }
 
     // conversions
     using ref = NamedType<T&, Parameter, Skills...>;
