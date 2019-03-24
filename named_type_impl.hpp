@@ -24,6 +24,8 @@ public:
     using UnderlyingType = T;
 
     // constructor
+    template <typename T_ = T, typename = std::enable_if<std::is_default_constructible_v<T>, void>>
+    constexpr NamedType() noexcept(noexcept(T())) {}
     explicit constexpr NamedType(T const& value) : value_(value) noexcept(noexcept(T(value))) {}
     template<typename T_ = T, typename = IsNotReference<T_>>
     explicit constexpr NamedType(T&& value) : value_(std::move(value)) noexcept(noexcept(T(std::move(value)))) {}
