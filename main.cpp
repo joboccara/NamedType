@@ -1,13 +1,13 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 
+#include "named_type.hpp"
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
-#include "named_type.hpp"
 
 // Usage examples
 
@@ -129,7 +129,7 @@ TEST_CASE("Divisible")
     using DivisibleType = fluent::NamedType<int, struct DivisibleTag, fluent::Divisible>;
     DivisibleType s1(120);
     DivisibleType s2(10);
-    REQUIRE((s1 / s2).get(), 12);
+    REQUIRE((s1 / s2).get() == 12);
     s1 /= s2;
     REQUIRE(s1.get() == 12);
 }
@@ -331,7 +331,7 @@ TEST_CASE("constexpr")
 {
     using strong_bool = fluent::NamedType<bool, struct BoolTag>;
 
-    static_assert(strong_bool{ true }.get());
+    static_assert(strong_bool{ true }.get(), "NamedType is not constexpr");
 }
 
 struct throw_on_construction
