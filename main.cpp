@@ -46,7 +46,7 @@ TEST_CASE("Basic usage")
 
 using NameRef = fluent::NamedType<std::string&, struct NameRefParameter>;
 
-void changeValue(const NameRef name)
+void changeValue(NameRef name)
 {
     name.get() = "value2";
 }
