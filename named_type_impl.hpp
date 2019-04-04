@@ -62,6 +62,26 @@ constexpr StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);
 }
+
+namespace details {
+template <class F, class... Ts>
+struct AnyOrderCallable{
+    F f;
+    template <class... Us>
+    auto operator()(Us&&...args) const
+    {
+        static_assert(sizeof...(Ts) == sizeof...(Us), "Passing wrong number of arguments");
+        auto x = std::make_tuple(std::forward<Us>(args)...);
+        return f(std::move(std::get<Ts>(x))...);
+    }
+};
+} //namespace details
+
+template <class... Args, class F>
+auto make_named_arg_function(F&& f)
+{
+    return details::AnyOrderCallable<F, Args...>{std::forward<F>(f)};
+}
     
 } // namespace fluent
 
