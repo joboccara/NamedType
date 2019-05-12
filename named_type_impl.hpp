@@ -6,18 +6,18 @@
 
 // Enable empty base class optimization with multiple inheritance on Visual Studio.
 #if defined(_MSC_VER) && _MSC_VER >= 1910
-#  define FLUENT_EBCO __declspec(empty_bases)
+#    define FLUENT_EBCO __declspec(empty_bases)
 #else
-#  define FLUENT_EBCO
+#    define FLUENT_EBCO
 #endif
 
 namespace fluent
 {
 
-template<typename T>
+template <typename T>
 using IsNotReference = typename std::enable_if<!std::is_reference<T>::value, void>::type;
 
-template <typename T, typename Parameter, template<typename> class... Skills>
+template <typename T, typename Parameter, template <typename> class... Skills>
 class FLUENT_EBCO NamedType : public Skills<NamedType<T, Parameter, Skills...>>...
 {
 public:
@@ -25,41 +25,53 @@ public:
 
     // constructor
     template <typename T_ = T, typename = std::enable_if<std::is_default_constructible<T>::value, void>>
-    constexpr NamedType() noexcept(noexcept(T())) {}
-    explicit constexpr NamedType(T const& value) noexcept(noexcept(T(value))) : value_(value) {}
-    template<typename T_ = T, typename = IsNotReference<T_>>
-    explicit constexpr NamedType(T&& value) noexcept(noexcept(T(std::move(value)))) : value_(std::move(value)) {}
+    constexpr NamedType() noexcept(noexcept(T()))
+    {
+    }
+    explicit constexpr NamedType(T const& value) noexcept(noexcept(T(value))) : value_(value)
+    {
+    }
+    template <typename T_ = T, typename = IsNotReference<T_>>
+    explicit constexpr NamedType(T&& value) noexcept(noexcept(T(std::move(value)))) : value_(std::move(value))
+    {
+    }
 
     // get
-    [[nodiscard]] constexpr T& get() noexcept { return value_; }
-    [[nodiscard]] constexpr std::remove_reference_t<T> const& get() const noexcept {return value_; }
+    [[nodiscard]] constexpr T& get() noexcept
+    {
+        return value_;
+    }
+    [[nodiscard]] constexpr std::remove_reference_t<T> const& get() const noexcept
+    {
+        return value_;
+    }
 
     // conversions
     using ref = NamedType<T&, Parameter, Skills...>;
-    operator ref ()
+    operator ref()
     {
         return ref(value_);
     }
 
     struct argument
     {
-        template<typename U>
+        template <typename U>
         NamedType operator=(U&& value) const
         {
             return NamedType(std::forward<U>(value));
         }
         argument() = default;
         argument(argument const&) = delete;
-        argument(argument &&) = delete;
+        argument(argument&&) = delete;
         argument& operator=(argument const&) = delete;
-        argument& operator=(argument &&) = delete;
+        argument& operator=(argument&&) = delete;
     };
 
 private:
     T value_;
 };
 
-template<template<typename T> class StrongType, typename T>
+template <template <typename T> class StrongType, typename T>
 constexpr StrongType<T> make_named(T const& value)
 {
     return StrongType<T>(value);

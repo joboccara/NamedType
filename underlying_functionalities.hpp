@@ -14,19 +14,30 @@ namespace fluent
 template <typename T>
 struct Incrementable : crtp<T, Incrementable>
 {
-    T& operator+=(T const& other) { this->underlying().get() += other.get(); return this->underlying(); }
+    T& operator+=(T const& other)
+    {
+        this->underlying().get() += other.get();
+        return this->underlying();
+    }
 };
 
 template <typename T>
 struct PreIncrementable : crtp<T, PreIncrementable>
 {
-    T& operator++() { ++this->underlying().get(); return this->underlying(); }
+    T& operator++()
+    {
+        ++this->underlying().get();
+        return this->underlying();
+    }
 };
 
 template <typename T>
 struct PostIncrementable : crtp<T, PostIncrementable>
 {
-    T operator++(int) { return this->underlying().get()++; }
+    T operator++(int)
+    {
+        return this->underlying().get()++;
+    }
 };
 
 template <typename T>
@@ -42,19 +53,28 @@ struct PreDecrementable : crtp<T, PreDecrementable>
 template <typename T>
 struct PostDecrementable : crtp<T, PostDecrementable>
 {
-    T operator--(int) { return this->underlying().get()--; }
+    T operator--(int)
+    {
+        return this->underlying().get()--;
+    }
 };
 
 template <typename T>
 struct Addable : crtp<T, Addable>
 {
-    T operator+(T const& other) const { return T(this->underlying().get() + other.get()); }
+    T operator+(T const& other) const
+    {
+        return T(this->underlying().get() + other.get());
+    }
 };
 
 template <typename T>
 struct Subtractable : crtp<T, Subtractable>
 {
-    T operator-(T const& other) const { return T(this->underlying().get() - other.get()); }
+    T operator-(T const& other) const
+    {
+        return T(this->underlying().get() - other.get());
+    }
     T& operator-=(T const& other)
     {
         this->underlying().get() -= other.get();
@@ -65,7 +85,10 @@ struct Subtractable : crtp<T, Subtractable>
 template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
 {
-    T operator*(T const& other) const { return T(this->underlying().get() * other.get()); }
+    T operator*(T const& other) const
+    {
+        return T(this->underlying().get() * other.get());
+    }
     T& operator*=(T const& other)
     {
         this->underlying().get() *= other.get();
@@ -76,7 +99,10 @@ struct Multiplicable : crtp<T, Multiplicable>
 template <typename T>
 struct Divisible : crtp<T, Divisible>
 {
-    T  operator/(T const& other) const { return T(this->underlying().get() / other.get()); }
+    T operator/(T const& other) const
+    {
+        return T(this->underlying().get() / other.get());
+    }
     T& operator/=(T const& other)
     {
         this->underlying().get() /= other.get();
@@ -87,7 +113,10 @@ struct Divisible : crtp<T, Divisible>
 template <typename T>
 struct Modulable : crtp<T, Modulable>
 {
-    T  operator%(T const& other) const { return T(this->underlying().get() % other.get()); }
+    T operator%(T const& other) const
+    {
+        return T(this->underlying().get() % other.get());
+    }
     T& operator%=(T const& other)
     {
         this->underlying().get() %= other.get();
@@ -98,13 +127,19 @@ struct Modulable : crtp<T, Modulable>
 template <typename T>
 struct BitWiseInvertable : crtp<T, BitWiseInvertable>
 {
-    T operator~() const { return T(~this->underlying().get()); }
+    T operator~() const
+    {
+        return T(~this->underlying().get());
+    }
 };
 
 template <typename T>
 struct BitWiseAndable : crtp<T, BitWiseAndable>
 {
-    T  operator&(T const& other) const { return T(this->underlying().get() & other.get()); }
+    T operator&(T const& other) const
+    {
+        return T(this->underlying().get() & other.get());
+    }
     T& operator&=(T const& other)
     {
         this->underlying().get() &= other.get();
@@ -115,7 +150,10 @@ struct BitWiseAndable : crtp<T, BitWiseAndable>
 template <typename T>
 struct BitWiseOrable : crtp<T, BitWiseOrable>
 {
-    T  operator|(T const& other) const { return T(this->underlying().get() | other.get()); }
+    T operator|(T const& other) const
+    {
+        return T(this->underlying().get() | other.get());
+    }
     T& operator|=(T const& other)
     {
         this->underlying().get() |= other.get();
@@ -126,7 +164,10 @@ struct BitWiseOrable : crtp<T, BitWiseOrable>
 template <typename T>
 struct BitWiseXorable : crtp<T, BitWiseXorable>
 {
-    T  operator^(T const& other) const { return T(this->underlying().get() ^ other.get()); }
+    T operator^(T const& other) const
+    {
+        return T(this->underlying().get() ^ other.get());
+    }
     T& operator^=(T const& other)
     {
         this->underlying().get() ^= other.get();
@@ -137,7 +178,10 @@ struct BitWiseXorable : crtp<T, BitWiseXorable>
 template <typename T>
 struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
 {
-    T  operator<<(T const& other) const { return T(this->underlying().get() << other.get()); }
+    T operator<<(T const& other) const
+    {
+        return T(this->underlying().get() << other.get());
+    }
     T& operator<<=(T const& other)
     {
         this->underlying().get() <<= other.get();
@@ -148,7 +192,10 @@ struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
 template <typename T>
 struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 {
-    T  operator>>(T const& other) const { return T(this->underlying().get() >> other.get()); }
+    T operator>>(T const& other) const
+    {
+        return T(this->underlying().get() >> other.get());
+    }
     T& operator>>=(T const& other)
     {
         this->underlying().get() >>= other.get();
@@ -159,24 +206,48 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 template <typename T>
 struct Negatable : crtp<T, Negatable>
 {
-    T operator-() const { return T(-this->underlying().get()); }
+    T operator-() const
+    {
+        return T(-this->underlying().get());
+    }
 };
 
 template <typename T>
 struct Comparable : crtp<T, Comparable>
 {
-    bool operator<(T const& other) const  { return this->underlying().get() < other.get(); }
-    bool operator>(T const& other) const  { return other.get() < this->underlying().get(); }
-    bool operator<=(T const& other) const { return !(other.get() < this->underlying().get());}
-    bool operator>=(T const& other) const { return !(*this < other); }
-    bool operator==(T const& other) const { return !(*this < other) && !(other.get() < this->underlying().get()); }
-    bool operator!=(T const& other) const { return !(*this == other); }
+    bool operator<(T const& other) const
+    {
+        return this->underlying().get() < other.get();
+    }
+    bool operator>(T const& other) const
+    {
+        return other.get() < this->underlying().get();
+    }
+    bool operator<=(T const& other) const
+    {
+        return !(other.get() < this->underlying().get());
+    }
+    bool operator>=(T const& other) const
+    {
+        return !(*this < other);
+    }
+    bool operator==(T const& other) const
+    {
+        return !(*this < other) && !(other.get() < this->underlying().get());
+    }
+    bool operator!=(T const& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 template <typename T>
 struct Printable : crtp<T, Printable>
 {
-    void print(std::ostream& os) const { os << this->underlying().get(); }
+    void print(std::ostream& os) const
+    {
+        os << this->underlying().get();
+    }
 };
 
 template <typename Destination>
@@ -192,23 +263,23 @@ struct ImplicitlyConvertibleTo
     };
 };
 
-template <typename T, typename Parameter, template<typename> class... Skills>
+template <typename T, typename Parameter, template <typename> class... Skills>
 std::ostream& operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
 {
     object.print(os);
     return os;
 }
 
-template<typename T>
+template <typename T>
 struct Hashable
 {
     static constexpr bool is_hashable = true;
 };
 
-template<typename NamedType_>
+template <typename NamedType_>
 struct FunctionCallable;
 
-template <typename T, typename Parameter, template<typename> class... Skills>
+template <typename T, typename Parameter, template <typename> class... Skills>
 struct FunctionCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, FunctionCallable>
 {
     operator T const&() const
@@ -221,47 +292,59 @@ struct FunctionCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, 
     }
 };
 
-template<typename NamedType_>
+template <typename NamedType_>
 struct MethodCallable;
 
-template <typename T, typename Parameter, template<typename> class... Skills>
+template <typename T, typename Parameter, template <typename> class... Skills>
 struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, MethodCallable>
 {
-    T const* operator->() const { return std::addressof(this->underlying().get()); }
-    T* operator->() { return std::addressof(this->underlying().get()); }
+    T const* operator->() const
+    {
+        return std::addressof(this->underlying().get());
+    }
+    T* operator->()
+    {
+        return std::addressof(this->underlying().get());
+    }
 };
 
-template<typename NamedType_>
-struct Callable : FunctionCallable<NamedType_>, MethodCallable<NamedType_>{};
+template <typename NamedType_>
+struct Callable
+    : FunctionCallable<NamedType_>
+    , MethodCallable<NamedType_>
+{
+};
 
 template <typename T>
-struct Arithmetic : Incrementable<T>,
-                    PreIncrementable<T>,
-                    PostIncrementable<T>,
-                    PreDecrementable<T>,
-                    PostDecrementable<T>,
-                    Addable<T>,
-                    Subtractable<T>,
-                    Multiplicable<T>,
-                    Divisible<T>,
-                    Modulable<T>,
-                    BitWiseInvertable<T>,
-                    BitWiseAndable<T>,
-                    BitWiseOrable<T>,
-                    BitWiseXorable<T>,
-                    BitWiseLeftShiftable<T>,
-                    BitWiseRightShiftable<T>,
-                    Negatable<T>,
-                    Comparable<T>,
-                    Printable<T>,
-                    Hashable<T>
-{};
+struct Arithmetic
+    : Incrementable<T>
+    , PreIncrementable<T>
+    , PostIncrementable<T>
+    , PreDecrementable<T>
+    , PostDecrementable<T>
+    , Addable<T>
+    , Subtractable<T>
+    , Multiplicable<T>
+    , Divisible<T>
+    , Modulable<T>
+    , BitWiseInvertable<T>
+    , BitWiseAndable<T>
+    , BitWiseOrable<T>
+    , BitWiseXorable<T>
+    , BitWiseLeftShiftable<T>
+    , BitWiseRightShiftable<T>
+    , Negatable<T>
+    , Comparable<T>
+    , Printable<T>
+    , Hashable<T>
+{
+};
 
 } // namespace fluent
 
 namespace std
 {
-template <typename T, typename Parameter, template<typename> class... Skills>
+template <typename T, typename Parameter, template <typename> class... Skills>
 struct hash<fluent::NamedType<T, Parameter, Skills...>>
 {
     using NamedType = fluent::NamedType<T, Parameter, Skills...>;
@@ -273,7 +356,6 @@ struct hash<fluent::NamedType<T, Parameter, Skills...>>
     }
 };
 
-}
-
+} // namespace std
 
 #endif
