@@ -242,7 +242,7 @@ TEST_CASE("ConvertibleWithOperator")
 {
     struct B
     {
-        B(int x) : x(x)
+        B(int x_) : x(x_)
         {
         }
         int x;
@@ -250,7 +250,7 @@ TEST_CASE("ConvertibleWithOperator")
 
     struct A
     {
-        A(int x) : x(x)
+        A(int x_) : x(x_)
         {
         }
         operator B() const
@@ -270,7 +270,7 @@ TEST_CASE("ConvertibleWithConstructor")
 {
     struct A
     {
-        A(int x) : x(x)
+        A(int x_) : x(x_)
         {
         }
         int x;
@@ -312,7 +312,7 @@ TEST_CASE("Hash")
 
 struct testFunctionCallable_A
 {
-    testFunctionCallable_A(int x) : x(x)
+    testFunctionCallable_A(int x_) : x(x_)
     {
     }
     // ensures that passing the argument to a function doesn't make a copy
@@ -354,7 +354,7 @@ TEST_CASE("Method callable")
     class A
     {
     public:
-        A(int x) : x(x)
+        A(int x_) : x(x_)
         {
         }
         A(A const&) = delete; // ensures that invoking a method doesn't make a copy
@@ -385,7 +385,7 @@ TEST_CASE("Callable")
     class A
     {
     public:
-        A(int x) : x(x)
+        A(int x_) : x(x_)
         {
         }
         A(A const&) = delete; // ensures that invoking a method or function doesn't make a copy
@@ -420,9 +420,9 @@ TEST_CASE("Named arguments")
     using LastName = fluent::NamedType<std::string, struct LastNameTag>;
     static const FirstName::argument firstName;
     static const LastName::argument lastName;
-    auto getFullName = [](FirstName const& firstName, LastName const& lastName) //
+    auto getFullName = [](FirstName const& firstName_, LastName const& lastName_) //
     {
-        return firstName.get() + lastName.get(); //
+        return firstName_.get() + lastName_.get(); //
     };
 
     auto fullName = getFullName(firstName = "James", lastName = "Bond");
