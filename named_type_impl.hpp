@@ -48,7 +48,8 @@ public:
     {
         return value_;
     }
-    [[nodiscard]] constexpr std::remove_reference_t<T> const& get() const noexcept
+
+    [[nodiscard]] constexpr T const& get() const noexcept
     {
         return value_;
     }
