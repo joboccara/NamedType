@@ -408,7 +408,7 @@ TEST_CASE("Callable")
 
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::Callable>;
     StrongA strongA(A(42));
-    const StrongA constStrongA(A((42)));
+    const StrongA constStrongA(A(42));
     REQUIRE(functionTakingA(strongA) == 42);
     REQUIRE(strongA->method() == 42);
     REQUIRE(constStrongA->constMethod() == 42);
