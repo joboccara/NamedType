@@ -11,6 +11,10 @@
 #    define FLUENT_EBCO
 #endif
 
+#define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN                                                                   \
+    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Weffc++\"")
+#define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END _Pragma("GCC diagnostic pop")
+
 namespace fluent
 {
 
@@ -58,8 +62,13 @@ public:
         template <typename U>
         NamedType operator=(U&& value) const
         {
+            IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
+
             return NamedType(std::forward<U>(value));
+
+            IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
         }
+
         argument() = default;
         argument(argument const&) = delete;
         argument(argument&&) = delete;

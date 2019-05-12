@@ -24,39 +24,55 @@ struct Incrementable : crtp<T, Incrementable>
 template <typename T>
 struct PreIncrementable : crtp<T, PreIncrementable>
 {
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
+
     T& operator++()
     {
         ++this->underlying().get();
         return this->underlying();
     }
+
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
 };
 
 template <typename T>
 struct PostIncrementable : crtp<T, PostIncrementable>
 {
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
+
     T operator++(int)
     {
         return this->underlying().get()++;
     }
+
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
 };
 
 template <typename T>
 struct PreDecrementable : crtp<T, PreDecrementable>
 {
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
+
     T& operator--()
     {
         --this->underlying().get();
         return this->underlying();
     }
+
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
 };
 
 template <typename T>
 struct PostDecrementable : crtp<T, PostDecrementable>
 {
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
+
     T operator--(int)
     {
         return this->underlying().get()--;
     }
+
+    IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
 };
 
 template <typename T>
