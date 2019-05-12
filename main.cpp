@@ -18,12 +18,11 @@ decltype(auto) tee(T&& value)
     return std::forward<T>(value);
 }
 
-using Meter = fluent::NamedType<double, struct MeterParameter, fluent::Addable, fluent::Comparable>;
+using Meter = fluent::NamedType<unsigned long long, struct MeterParameter, fluent::Addable, fluent::Comparable>;
 Meter operator"" _meter(unsigned long long value)
 {
     return Meter(value);
 }
-// Meter operator"" _meter(long double value) { return Meter(value); }
 
 using Width = fluent::NamedType<Meter, struct WidthParameter>;
 using Height = fluent::NamedType<Meter, struct HeightParameter>;
