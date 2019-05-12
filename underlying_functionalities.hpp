@@ -366,8 +366,10 @@ struct hash<fluent::NamedType<T, Parameter, Skills...>>
     using NamedType = fluent::NamedType<T, Parameter, Skills...>;
     using checkIfHashable = typename std::enable_if<NamedType::is_hashable, void>::type;
 
-    size_t operator()(fluent::NamedType<T, Parameter, Skills...> const& x) const
+    size_t operator()(fluent::NamedType<T, Parameter, Skills...> const& x) const noexcept
     {
+        static_assert(noexcept(std::hash<T>()(x.get())), "hash fuction should not throw");
+
         return std::hash<T>()(x.get());
     }
 };
