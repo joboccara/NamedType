@@ -148,7 +148,7 @@ TEST_CASE("Negatable")
 {
     using NegatableType = fluent::NamedType<int, struct NegatableTag, fluent::Negatable>;
     NegatableType value(10);
-    REQUIRE((-value).get() == -10);
+    REQUIRE(value.negate().get() == -10);
 }
 
 TEST_CASE("Modulable")

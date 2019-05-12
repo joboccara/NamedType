@@ -222,7 +222,7 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 template <typename T>
 struct Negatable : crtp<T, Negatable>
 {
-    T operator-() const
+    T negate() const
     {
         return T(-this->underlying().get());
     }
