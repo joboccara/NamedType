@@ -29,14 +29,17 @@ public:
 
     // constructor
     template <typename T_ = T, typename = std::enable_if<std::is_default_constructible<T>::value, void>>
-    constexpr NamedType() noexcept(noexcept(T()))
+    constexpr NamedType() noexcept(std::is_nothrow_constructible<T>::value)
     {
     }
-    explicit constexpr NamedType(T const& value) noexcept(noexcept(T(value))) : value_(value)
+
+    explicit constexpr NamedType(T const& value) noexcept(std::is_nothrow_copy_constructible<T>::value) : value_(value)
     {
     }
+
     template <typename T_ = T, typename = IsNotReference<T_>>
-    explicit constexpr NamedType(T&& value) noexcept(noexcept(T(std::move(value)))) : value_(std::move(value))
+    explicit constexpr NamedType(T&& value) noexcept(std::is_nothrow_move_constructible<T>::value)
+        : value_(std::move(value))
     {
     }
 
