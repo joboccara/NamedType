@@ -28,6 +28,10 @@ public:
     template<typename T_ = T, typename = IsNotReference<T_>>
     explicit constexpr NamedType(T&& value) : value_(std::move(value)) {}
     
+    template <typename T_ = T,
+              typename = std::enable_if<std::is_default_constructible<T>::value, void>>
+    constexpr NamedType() noexcept(std::is_nothrow_constructible<T>::value) {}
+
     // get
     constexpr T& get() { return value_; }
     constexpr std::remove_reference_t<T> const& get() const {return value_; }
