@@ -8,7 +8,7 @@
 
 #include "catch.hpp"
 
-#include "named_type.hpp"
+#include "NamedType/named_type.hpp"
 
 #include <cmath>
 #include <iomanip>
