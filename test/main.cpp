@@ -1,7 +1,15 @@
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do this in one cpp file
+
+// Cleanup windows include - windows.h is included by "catch.hpp" -->
+
+#define NOGDI
+
+// <-- Cleanup windows include
+
 #include "catch.hpp"
 
-#include "named_type.hpp"
+#include "NamedType/named_type.hpp"
+
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -11,16 +19,18 @@
 
 // Usage examples
 
-template<typename T>
+template <typename T>
 decltype(auto) tee(T&& value)
 {
     std::cout << value << '\n';
     return std::forward<T>(value);
 }
 
-using Meter = fluent::NamedType<double, struct MeterParameter, fluent::Addable, fluent::Comparable>;
-Meter operator"" _meter(unsigned long long value) { return Meter(value); }
-//Meter operator"" _meter(long double value) { return Meter(value); }
+using Meter = fluent::NamedType<unsigned long long, struct MeterParameter, fluent::Addable, fluent::Comparable>;
+Meter operator"" _meter(unsigned long long value)
+{
+    return Meter(value);
+}
 
 using Width = fluent::NamedType<Meter, struct WidthParameter>;
 using Height = fluent::NamedType<Meter, struct HeightParameter>;
@@ -28,9 +38,17 @@ using Height = fluent::NamedType<Meter, struct HeightParameter>;
 class Rectangle
 {
 public:
-    Rectangle(Width width, Height height) : width_(width.get()), height_(height.get()) {}
-    Meter getWidth() const { return width_; }
-    Meter getHeight() const { return height_; }
+    Rectangle(Width width, Height height) : width_(width.get()), height_(height.get())
+    {
+    }
+    Meter getWidth() const
+    {
+        return width_;
+    }
+    Meter getHeight() const
+    {
+        return height_;
+    }
 
 private:
     Meter width_;
@@ -46,7 +64,7 @@ TEST_CASE("Basic usage")
 
 using NameRef = fluent::NamedType<std::string&, struct NameRefParameter>;
 
-void changeValue(const NameRef name)
+void changeValue(NameRef name)
 {
     name.get() = "value2";
 }
@@ -82,7 +100,7 @@ TEST_CASE("Implicit conversion of NamedType to NamedType::ref")
     REQUIRE(j.get() == 43);
 }
 
-template<typename Function>
+template <typename Function>
 using Comparator = fluent::NamedType<Function, struct ComparatorParameter>;
 
 template <typename Function>
@@ -93,7 +111,7 @@ std::string performAction(Comparator<Function> comp)
 
 TEST_CASE("Strong generic type")
 {
-    REQUIRE(performAction(fluent::make_named<Comparator>([](){ return std::string("compare"); })) == "compare");
+    REQUIRE(performAction(fluent::make_named<Comparator>([]() { return std::string("compare"); })) == "compare");
 }
 
 TEST_CASE("Addable")
@@ -136,9 +154,9 @@ TEST_CASE("Divisible")
 
 TEST_CASE("Negatable")
 {
-  using NegatableType = fluent::NamedType<int, struct NegatableTag, fluent::Negatable>;
-  NegatableType value(10);
-  REQUIRE((-value).get() == -10);
+    using NegatableType = fluent::NamedType<int, struct NegatableTag, fluent::Negatable>;
+    NegatableType value(10);
+    REQUIRE(value.negate().get() == -10);
 }
 
 TEST_CASE("Modulable")
@@ -190,7 +208,8 @@ TEST_CASE("BitWiseXorable")
 
 TEST_CASE("BitWiseLeftShiftable")
 {
-    using BitWiseLeftShiftableType = fluent::NamedType<int, struct BitWiseLeftShiftableTag, fluent::BitWiseLeftShiftable>;
+    using BitWiseLeftShiftableType =
+        fluent::NamedType<int, struct BitWiseLeftShiftableTag, fluent::BitWiseLeftShiftable>;
     BitWiseLeftShiftableType s1(2);
     BitWiseLeftShiftableType s2(3);
     CHECK((s1 << s2).get() == (2 << 3));
@@ -200,7 +219,8 @@ TEST_CASE("BitWiseLeftShiftable")
 
 TEST_CASE("BitWiseRightShiftable")
 {
-    using BitWiseRightShiftableType = fluent::NamedType<int, struct BitWiseRightShiftableTag, fluent::BitWiseRightShiftable>;
+    using BitWiseRightShiftableType =
+        fluent::NamedType<int, struct BitWiseRightShiftableTag, fluent::BitWiseRightShiftable>;
     BitWiseRightShiftableType s1(2);
     BitWiseRightShiftableType s2(3);
     CHECK((s1 >> s2).get() == (2 >> 3));
@@ -214,12 +234,12 @@ TEST_CASE("Comparable")
     REQUIRE(!(10_meter == 11_meter));
     REQUIRE((10_meter != 11_meter));
     REQUIRE(!(10_meter != 10_meter));
-    REQUIRE((10_meter <  11_meter));
-    REQUIRE(!(10_meter <  10_meter));
+    REQUIRE((10_meter < 11_meter));
+    REQUIRE(!(10_meter < 10_meter));
     REQUIRE((10_meter <= 10_meter));
     REQUIRE((10_meter <= 11_meter));
     REQUIRE(!(10_meter <= 9_meter));
-    REQUIRE((11_meter >  10_meter));
+    REQUIRE((11_meter > 10_meter));
     REQUIRE(!(10_meter > 11_meter));
     REQUIRE((11_meter >= 10_meter));
     REQUIRE((10_meter >= 10_meter));
@@ -230,14 +250,21 @@ TEST_CASE("ConvertibleWithOperator")
 {
     struct B
     {
-        B(int x) : x(x) {}
+        B(int x_) : x(x_)
+        {
+        }
         int x;
     };
 
     struct A
     {
-        A(int x) : x(x) {}
-        operator B () const { return B(x);}
+        A(int x_) : x(x_)
+        {
+        }
+        operator B() const
+        {
+            return B(x);
+        }
         int x;
     };
 
@@ -251,13 +278,17 @@ TEST_CASE("ConvertibleWithConstructor")
 {
     struct A
     {
-        A(int x) : x(x) {}
+        A(int x_) : x(x_)
+        {
+        }
         int x;
     };
 
     struct B
     {
-        B(A a) : x(a.x) {}
+        B(A a) : x(a.x)
+        {
+        }
         int x;
     };
 
@@ -279,7 +310,7 @@ TEST_CASE("Hash")
 {
     using SerialNumber = fluent::NamedType<std::string, struct SerialNumberTag, fluent::Comparable, fluent::Hashable>;
 
-    std::unordered_map<SerialNumber, int> hashMap = { {SerialNumber{"AA11"}, 10}, {SerialNumber{"BB22"}, 20} };
+    std::unordered_map<SerialNumber, int> hashMap = {{SerialNumber{"AA11"}, 10}, {SerialNumber{"BB22"}, 20}};
     SerialNumber cc33{"CC33"};
     hashMap[cc33] = 30;
     REQUIRE(hashMap[SerialNumber{"AA11"}] == 10);
@@ -289,10 +320,17 @@ TEST_CASE("Hash")
 
 struct testFunctionCallable_A
 {
-    testFunctionCallable_A(int x) : x(x) {}
-    testFunctionCallable_A(testFunctionCallable_A const&) = delete; // ensures that passing the argument to a function doesn't make a copy
+    testFunctionCallable_A(int x_) : x(x_)
+    {
+    }
+    // ensures that passing the argument to a function doesn't make a copy
+    testFunctionCallable_A(testFunctionCallable_A const&) = delete;
     testFunctionCallable_A(testFunctionCallable_A&&) = default;
-    testFunctionCallable_A& operator+=(testFunctionCallable_A const& other) { x += other.x; return *this; }
+    testFunctionCallable_A& operator+=(testFunctionCallable_A const& other)
+    {
+        x += other.x;
+        return *this;
+    }
     int x;
 };
 
@@ -309,7 +347,7 @@ bool operator==(testFunctionCallable_A const& a1, testFunctionCallable_A const& 
 TEST_CASE("Function callable")
 {
     using A = testFunctionCallable_A;
-    auto functionTakingA = [](A const& a){ return a.x; };
+    auto functionTakingA = [](A const& a) { return a.x; };
 
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::FunctionCallable>;
     StrongA strongA(A(42));
@@ -324,12 +362,21 @@ TEST_CASE("Method callable")
     class A
     {
     public:
-        A(int x) : x(x) {}
+        A(int x_) : x(x_)
+        {
+        }
         A(A const&) = delete; // ensures that invoking a method doesn't make a copy
         A(A&&) = default;
 
-        int method(){ return x; }
-        int constMethod() const{ return x; }
+        int method()
+        {
+            return x;
+        }
+        int constMethod() const
+        {
+            return x;
+        }
+
     private:
         int x;
     };
@@ -346,21 +393,30 @@ TEST_CASE("Callable")
     class A
     {
     public:
-        A(int x) : x(x) {}
+        A(int x_) : x(x_)
+        {
+        }
         A(A const&) = delete; // ensures that invoking a method or function doesn't make a copy
         A(A&&) = default;
 
-        int method(){ return x; }
-        int constMethod() const{ return x; }
+        int method()
+        {
+            return x;
+        }
+        int constMethod() const
+        {
+            return x;
+        }
+
     private:
         int x;
     };
 
-    auto functionTakingA = [](A const& a){ return a.constMethod(); };
+    auto functionTakingA = [](A const& a) { return a.constMethod(); };
 
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::Callable>;
     StrongA strongA(A(42));
-    const StrongA constStrongA(A((42)));
+    const StrongA constStrongA(A(42));
     REQUIRE(functionTakingA(strongA) == 42);
     REQUIRE(strongA->method() == 42);
     REQUIRE(constStrongA->constMethod() == 42);
@@ -372,9 +428,9 @@ TEST_CASE("Named arguments")
     using LastName = fluent::NamedType<std::string, struct LastNameTag>;
     static const FirstName::argument firstName;
     static const LastName::argument lastName;
-    auto getFullName = [](FirstName const& firstName, LastName const& lastName)
+    auto getFullName = [](FirstName const& firstName_, LastName const& lastName_) //
     {
-        return firstName.get() + lastName.get();
+        return firstName_.get() + lastName_.get(); //
     };
 
     auto fullName = getFullName(firstName = "James", lastName = "Bond");
@@ -398,14 +454,20 @@ TEST_CASE("constexpr")
 {
     using strong_bool = fluent::NamedType<bool, struct BoolTag>;
 
-    static_assert(strong_bool{ true }.get(), "NamedType is not constexpr");
+    static_assert(strong_bool{true}.get(), "NamedType is not constexpr");
 }
 
 struct throw_on_construction
 {
-    throw_on_construction() { throw 42; }
+    throw_on_construction()
+    {
+        throw 42;
+    }
 
-    throw_on_construction(int) { throw "exception"; }
+    throw_on_construction(int)
+    {
+        throw "exception";
+    }
 };
 
 using C = fluent::NamedType<throw_on_construction, struct throwTag>;
@@ -422,8 +484,8 @@ TEST_CASE("noexcept")
 TEST_CASE("Arithmetic")
 {
     using strong_arithmetic = fluent::NamedType<int, struct ArithmeticTag, fluent::Arithmetic>;
-    strong_arithmetic a{ 1 };
-    strong_arithmetic b{ 2 };
+    strong_arithmetic a{1};
+    strong_arithmetic b{2};
 
     CHECK((a + b).get() == 3);
 
