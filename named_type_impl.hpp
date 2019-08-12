@@ -11,9 +11,14 @@
 #    define FLUENT_EBCO
 #endif
 
-#define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN                                                                   \
+#if defined(__clang__) || defined(__GNUC__)
+#   define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN                                                                \
     _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Weffc++\"")
-#define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END _Pragma("GCC diagnostic pop")
+#   define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END _Pragma("GCC diagnostic pop")
+#else
+#   define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN /* Nothing */
+#   define IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END   /* Nothing */
+#endif
 
 namespace fluent
 {
