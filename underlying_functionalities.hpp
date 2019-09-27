@@ -27,12 +27,14 @@ template <typename T>
 struct Addable : crtp<T, Addable>
 {
     T operator+(T const& other) const { return T(this->underlying().get() + other.get()); }
+    T operator+() const { return T(+this->underlying().get()); }
 };
 
 template <typename T>
 struct Subtractable : crtp<T, Subtractable>
 {
     T operator-(T const& other) const { return T(this->underlying().get() - other.get()); }
+    T operator-() const { return T(-this->underlying().get()); }
 };
     
 template <typename T>
