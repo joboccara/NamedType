@@ -72,6 +72,7 @@ The skill `Callable` is the union of `FunctionCallable` and `MethodCallable`.
 
 ## Named arguments
 By their nature strong types can play the role of named parameters:
+
 ```cpp
 using FirstName = NamedType<std::string, struct FirstNameTag>;
 using LastName = NamedType<std::string, struct LastNameTag>;
@@ -81,7 +82,9 @@ void displayName(FirstName const& theFirstName, LastName const& theLastName);
 // Call site
 displayName(FirstName("John"), LastName("Doe"));
 ```
+
 But the nested type `argument` allows to emulate a named argument syntax:
+
 ```cpp
 using FirstName = NamedType<std::string, struct FirstNameTag>;
 using LastName = NamedType<std::string, struct LastNameTag>;
