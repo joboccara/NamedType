@@ -98,7 +98,7 @@ TEST_CASE("Strong generic type")
 
 TEST_CASE("Addable")
 {
-    using AddableType = fluent::NamedType<int, struct SubtractableTag, fluent::Addable>;
+    using AddableType = fluent::NamedType<int, struct AddableTag, fluent::Addable>;
     AddableType s1(12);
     AddableType s2(10);
     REQUIRE((s1 + s2).get() == 22);
