@@ -18,6 +18,12 @@ struct Incrementable : crtp<T, Incrementable>
 };
 
 template <typename T>
+struct Decrementable : crtp<T, Decrementable>
+{
+  T& operator-=(T const& other) { this->underlying().get() -= other.get(); return this->underlying(); }
+};
+
+template <typename T>
 struct PreIncrementable : crtp<T, PreIncrementable>
 {
     T& operator++() { ++this->underlying().get(); return this->underlying(); }
