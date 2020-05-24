@@ -41,6 +41,11 @@ public:
     
     struct argument
     {
+        NamedType operator=(T&& value) const
+        {
+            return NamedType(std::forward<T>(value));
+        }
+
         template<typename U>
         NamedType operator=(U&& value) const
         {
