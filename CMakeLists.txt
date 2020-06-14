@@ -6,6 +6,11 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.13")
     cmake_policy(SET CMP0076 NEW)
 endif()
 
+set(MASTER_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(MASTER_PROJECT ON)
+endif ()
+
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE "include/")
 
@@ -18,6 +23,6 @@ target_sources(${PROJECT_NAME} INTERFACE
 
 set(ENABLE_TEST ON CACHE BOOL "Enable test")
 
-if (ENABLE_TEST)
+if (ENABLE_TEST AND ${MASTER_PROJECT})
 	add_subdirectory(test)
 endif()
