@@ -340,6 +340,25 @@ TEST_CASE("Named arguments")
     REQUIRE(fullName == "JamesBond");
 }
 
+TEST_CASE("Named arguments in any order")
+{
+    using FirstName = fluent::NamedType<std::string, struct FirstNameTag>;
+    using LastName = fluent::NamedType<std::string, struct LastNameTag>;
+    static const FirstName::argument firstName;
+    static const LastName::argument lastName;
+
+    auto getFullName = fluent::make_named_arg_function<FirstName, LastName>([](FirstName const& firstName, LastName const& lastName)
+    {
+        return firstName.get() + lastName.get();
+    });
+
+    auto fullName = getFullName(lastName = "Bond", firstName = "James");
+    REQUIRE(fullName == "JamesBond");
+
+    auto otherFullName = getFullName(firstName = "James", lastName = "Bond");
+    REQUIRE(otherFullName == "JamesBond");
+}
+
 TEST_CASE("Named arguments with bracket constructor")
 {
     using Numbers = fluent::NamedType<std::vector<int>, struct NumbersTag>;
