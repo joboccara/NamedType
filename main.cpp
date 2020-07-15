@@ -98,10 +98,25 @@ TEST_CASE("Strong generic type")
 
 TEST_CASE("Addable")
 {
-    using AddableType = fluent::NamedType<int, struct SubtractableTag, fluent::Addable>;
+    using AddableType = fluent::NamedType<int, struct AddableTag, fluent::Addable>;
     AddableType s1(12);
     AddableType s2(10);
     REQUIRE((s1 + s2).get() == 22);
+    REQUIRE((+s1).get() == 12);
+}
+
+TEST_CASE("BinaryAddable")
+{
+    using BinaryAddableType = fluent::NamedType<int, struct BinaryAddableTag, fluent::BinaryAddable>;
+    BinaryAddableType s1(12);
+    BinaryAddableType s2(10);
+    REQUIRE((s1 + s2).get() == 22);
+}
+
+TEST_CASE("UnaryAddable")
+{
+    using UnaryAddableType = fluent::NamedType<int, struct UnaryAddableTag, fluent::UnaryAddable>;
+    UnaryAddableType s1(12);
     REQUIRE((+s1).get() == 12);
 }
 
@@ -112,6 +127,21 @@ TEST_CASE("Subtractable")
     SubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
     REQUIRE((-s1).get() == -12);
+}
+
+TEST_CASE("BinarySubtractable")
+{
+    using BinarySubtractableType = fluent::NamedType<int, struct BinarySubtractableTag, fluent::BinarySubtractable>;
+    BinarySubtractableType s1(12);
+    BinarySubtractableType s2(10);
+    REQUIRE((s1 - s2).get() == 2);
+}
+
+TEST_CASE("UnarySubtractable")
+{
+    using UnarySubtractableType = fluent::NamedType<int, struct UnarySubtractableTag, fluent::UnarySubtractable>;
+    UnarySubtractableType s(12);
+    REQUIRE((-s).get() == -12);
 }
 
 TEST_CASE("Multiplicable")

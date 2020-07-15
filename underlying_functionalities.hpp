@@ -30,18 +30,34 @@ struct PreIncrementable : crtp<T, PreIncrementable>
 };
 
 template <typename T>
-struct Addable : crtp<T, Addable>
+struct BinaryAddable : crtp<T, BinaryAddable>
 {
     T operator+(T const& other) const { return T(this->underlying().get() + other.get()); }
+};
+
+template <typename T>
+struct UnaryAddable : crtp<T, UnaryAddable>
+{
     T operator+() const { return T(+this->underlying().get()); }
 };
 
 template <typename T>
-struct Subtractable : crtp<T, Subtractable>
+struct Addable : BinaryAddable<T>, UnaryAddable<T> {};
+
+template <typename T>
+struct BinarySubtractable : crtp<T, BinarySubtractable>
 {
     T operator-(T const& other) const { return T(this->underlying().get() - other.get()); }
+};
+    
+template <typename T>
+struct UnarySubtractable : crtp<T, UnarySubtractable>
+{
     T operator-() const { return T(-this->underlying().get()); }
 };
+    
+template <typename T>
+struct Subtractable : BinarySubtractable<T>, UnarySubtractable<T> {};
     
 template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
