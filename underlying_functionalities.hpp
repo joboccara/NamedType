@@ -18,6 +18,12 @@ struct Incrementable : crtp<T, Incrementable>
 };
 
 template <typename T>
+struct Decrementable : crtp<T, Decrementable>
+{
+  T& operator-=(T const& other) { this->underlying().get() -= other.get(); return this->underlying(); }
+};
+
+template <typename T>
 struct PreIncrementable : crtp<T, PreIncrementable>
 {
     T& operator++() { ++this->underlying().get(); return this->underlying(); }
@@ -40,15 +46,21 @@ struct Multiplicable : crtp<T, Multiplicable>
 {
     T operator*(T const& other) const { return T(this->underlying().get() * other.get()); }
 };
+
+template <typename T>
+struct Negatable : crtp<T, Negatable>
+{
+    T operator-() const { return T(-this->underlying().get()); }
+};
     
 template <typename T>
 struct Comparable : crtp<T, Comparable>
 {
     bool operator<(T const& other) const  { return this->underlying().get() < other.get(); }
     bool operator>(T const& other) const  { return other.get() < this->underlying().get(); }
-    bool operator<=(T const& other) const { return !(other.get() < this->underlying().get());}
+    bool operator<=(T const& other) const { return !(*this > other); }
     bool operator>=(T const& other) const { return !(*this < other); }
-    bool operator==(T const& other) const { return !(*this < other) && !(other.get() < this->underlying().get()); }
+    bool operator==(T const& other) const { return !(*this < other || *this > other); }
     bool operator!=(T const& other) const { return !(*this == other); }
 };
 

@@ -2,6 +2,7 @@
 #define named_type_impl_h
 
 #include <type_traits>
+#include <utility>
 
 // Enable empty base class optimization with multiple inheritance on Visual Studio.
 #if defined(_MSC_VER) && _MSC_VER >= 1910
@@ -29,7 +30,7 @@ public:
     
     // get
     constexpr T& get() { return value_; }
-    constexpr T const& get() const {return value_; }
+    constexpr std::remove_reference_t<T> const& get() const {return value_; }
 
     // conversions
     using ref = NamedType<T&, Parameter, Skills...>;
