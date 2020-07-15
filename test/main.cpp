@@ -190,13 +190,6 @@ TEST_CASE("Divisible")
     REQUIRE(s1.get() == 12);
 }
 
-TEST_CASE("Negatable")
-{
-    using NegatableType = fluent::NamedType<int, struct NegatableTag, fluent::Negatable>;
-    NegatableType value(10);
-  REQUIRE((-value).get() == -10);
-}
-
 TEST_CASE("Modulable")
 {
     using ModulableType = fluent::NamedType<int, struct ModulableTag, fluent::Modulable>;
