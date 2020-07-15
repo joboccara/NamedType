@@ -82,6 +82,14 @@ TEST_CASE("Implicit conversion of NamedType to NamedType::ref")
     REQUIRE(j.get() == 43);
 }
 
+TEST_CASE("Default construction")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
+    StrongInt strongInt;
+    strongInt.get() = 42;
+    REQUIRE(strongInt.get() == 42);
+}
+
 template<typename Function>
 using Comparator = fluent::NamedType<Function, struct ComparatorParameter>;
 
@@ -98,10 +106,26 @@ TEST_CASE("Strong generic type")
 
 TEST_CASE("Addable")
 {
-    using AddableType = fluent::NamedType<int, struct SubtractableTag, fluent::Addable>;
+    using AddableType = fluent::NamedType<int, struct AddableTag, fluent::Addable>;
     AddableType s1(12);
     AddableType s2(10);
     REQUIRE((s1 + s2).get() == 22);
+    REQUIRE((+s1).get() == 12);
+}
+
+TEST_CASE("BinaryAddable")
+{
+    using BinaryAddableType = fluent::NamedType<int, struct BinaryAddableTag, fluent::BinaryAddable>;
+    BinaryAddableType s1(12);
+    BinaryAddableType s2(10);
+    REQUIRE((s1 + s2).get() == 22);
+}
+
+TEST_CASE("UnaryAddable")
+{
+    using UnaryAddableType = fluent::NamedType<int, struct UnaryAddableTag, fluent::UnaryAddable>;
+    UnaryAddableType s1(12);
+    REQUIRE((+s1).get() == 12);
 }
 
 TEST_CASE("Subtractable")
@@ -110,6 +134,22 @@ TEST_CASE("Subtractable")
     SubtractableType s1(12);
     SubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
+    REQUIRE((-s1).get() == -12);
+}
+
+TEST_CASE("BinarySubtractable")
+{
+    using BinarySubtractableType = fluent::NamedType<int, struct BinarySubtractableTag, fluent::BinarySubtractable>;
+    BinarySubtractableType s1(12);
+    BinarySubtractableType s2(10);
+    REQUIRE((s1 - s2).get() == 2);
+}
+
+TEST_CASE("UnarySubtractable")
+{
+    using UnarySubtractableType = fluent::NamedType<int, struct UnarySubtractableTag, fluent::UnarySubtractable>;
+    UnarySubtractableType s(12);
+    REQUIRE((-s).get() == -12);
 }
 
 TEST_CASE("Multiplicable")
@@ -317,6 +357,19 @@ TEST_CASE("Named arguments in any order")
 
     auto otherFullName = getFullName(firstName = "James", lastName = "Bond");
     REQUIRE(otherFullName == "JamesBond");
+}
+
+TEST_CASE("Named arguments with bracket constructor")
+{
+    using Numbers = fluent::NamedType<std::vector<int>, struct NumbersTag>;
+    static const Numbers::argument numbers;
+    auto getNumbers = [](Numbers const& numbers)
+    {
+        return numbers.get();
+    };
+
+    auto vec = getNumbers(numbers = {1, 2, 3});
+    REQUIRE(vec == std::vector<int>{1, 2, 3});
 }
 
 TEST_CASE("Empty base class optimization")
