@@ -82,6 +82,14 @@ TEST_CASE("Implicit conversion of NamedType to NamedType::ref")
     REQUIRE(j.get() == 43);
 }
 
+TEST_CASE("Default construction")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
+    StrongInt strongInt;
+    strongInt.get() = 42;
+    REQUIRE(strongInt.get() == 42);
+}
+
 template<typename Function>
 using Comparator = fluent::NamedType<Function, struct ComparatorParameter>;
 
