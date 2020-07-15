@@ -102,6 +102,7 @@ TEST_CASE("Addable")
     AddableType s1(12);
     AddableType s2(10);
     REQUIRE((s1 + s2).get() == 22);
+    REQUIRE((+s1).get() == 12);
 }
 
 TEST_CASE("Subtractable")
@@ -110,6 +111,7 @@ TEST_CASE("Subtractable")
     SubtractableType s1(12);
     SubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
+    REQUIRE((-s1).get() == -12);
 }
 
 TEST_CASE("Multiplicable")
