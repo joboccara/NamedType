@@ -300,6 +300,19 @@ TEST_CASE("Named arguments")
     REQUIRE(fullName == "JamesBond");
 }
 
+TEST_CASE("Named arguments with bracket constructor")
+{
+    using Numbers = fluent::NamedType<std::vector<int>, struct NumbersTag>;
+    static const Numbers::argument numbers;
+    auto getNumbers = [](Numbers const& numbers)
+    {
+        return numbers.get();
+    };
+
+    auto vec = getNumbers(numbers = {1, 2, 3});
+    REQUIRE(vec == std::vector<int>{1, 2, 3});
+}
+
 TEST_CASE("Empty base class optimization")
 {
     REQUIRE(sizeof(Meter) == sizeof(double));
