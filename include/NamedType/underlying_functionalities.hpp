@@ -12,23 +12,6 @@ namespace fluent
 {
 
 template <typename T>
-struct Incrementable : crtp<T, Incrementable>
-{
-    T& operator+=(T const& other)
-    {
-        this->underlying().get() += other.get();
-        return this->underlying();
-    }
-};
-
-template <typename T>
-struct Decrementable : crtp<T, Decrementable>
-{
- T& operator-=(T const& other) { this->underlying().get() -= other.get(); return this->underlying(); }
-};
-
-
-template <typename T>
 struct PreIncrementable : crtp<T, PreIncrementable>
 {
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
@@ -246,7 +229,7 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 template <typename T>
 struct Negatable : crtp<T, Negatable>
 {
-    T negate() const
+    T operator-() const
     {
         return T(-this->underlying().get());
     }
@@ -357,8 +340,7 @@ struct Callable
 
 template <typename T>
 struct Arithmetic
-    : Incrementable<T>
-    , PreIncrementable<T>
+    : PreIncrementable<T>
     , PostIncrementable<T>
     , PreDecrementable<T>
     , PostDecrementable<T>
