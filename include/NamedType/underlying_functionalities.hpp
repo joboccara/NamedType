@@ -245,9 +245,9 @@ struct Comparable : crtp<T, Comparable>
     {
         return !(*this < other);
     }
-    bool operator==(T const& other) const
+    friend bool operator==(Comparable<T> const& self, T const& other)
     {
-        return !(*this < other) && !(other.get() < this->underlying().get());
+        return !(self < other) && !(other.get() < self.underlying().get());
     }
     bool operator!=(T const& other) const
     {
