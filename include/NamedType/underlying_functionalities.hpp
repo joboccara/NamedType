@@ -83,7 +83,11 @@ struct UnaryAddable : crtp<T, UnaryAddable>
 };
 
 template <typename T>
-struct Addable : BinaryAddable<T>, UnaryAddable<T> {};
+struct Addable : BinaryAddable<T>, UnaryAddable<T>
+{
+    using BinaryAddable<T>::operator+;
+    using UnaryAddable<T>::operator+;
+};
 
 template <typename T>
 struct BinarySubtractable : crtp<T, BinarySubtractable>
@@ -103,7 +107,11 @@ struct UnarySubtractable : crtp<T, UnarySubtractable>
 };
    
 template <typename T>
-struct Subtractable : BinarySubtractable<T>, UnarySubtractable<T> {};
+struct Subtractable : BinarySubtractable<T>, UnarySubtractable<T>
+{
+    using UnarySubtractable<T>::operator-;
+    using BinarySubtractable<T>::operator-;
+};
    
 template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
