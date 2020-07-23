@@ -1,6 +1,11 @@
+[![Build Status](https://travis-ci.org/joboccara/pipes.svg?branch=master)](https://travis-ci.org/joboccara/pipes)
+![GitHub](https://img.shields.io/github/license/joboccara/pipes)
+
 A **strong type** is a type used in place of another type to carry specific **meaning** through its **name**.
 
 This project experiments with strong types in C++. All components are in the namespace `fluent`. You can find a collection of blog posts explaining the rationale of the library and usages for strong types on [Fluent C++](https://www.fluentcpp.com/2016/12/08/strong-types-for-strong-interfaces/).
+
+<a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
 
 ## Basic usage
 
@@ -99,3 +104,5 @@ displayName(firstName = "John", lastName = "Doe");
 ```
 
 You can have a look at main.cpp for usage examples.
+
+<a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
