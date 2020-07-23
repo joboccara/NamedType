@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/joboccara/NamedType.svg?branch=travis)](https://travis-ci.org/joboccara/NamedType)
+[![Build Status](https://travis-ci.org/joboccara/NamedType.svg?branch=master)](https://travis-ci.org/joboccara/NamedType)
 ![GitHub](https://img.shields.io/github/license/joboccara/pipes)
 
 A **strong type** is a type used in place of another type to carry specific **meaning** through its **name**.
