@@ -63,4 +63,3 @@ script:
     - cmake -DENABLE_TEST=ON ..
     - make
     - test/NamedTypeTest
-

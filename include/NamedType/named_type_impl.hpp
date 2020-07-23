@@ -35,7 +35,7 @@ public:
 
     // constructor
     template <typename T_ = T, typename = std::enable_if<std::is_default_constructible<T>::value, void>>
-    constexpr NamedType() noexcept(std::is_nothrow_constructible<T>::value)
+    constexpr NamedType() noexcept(std::is_nothrow_constructible<T>::value) : value_()
     {
     }
 
@@ -71,7 +71,11 @@ public:
     {
        NamedType operator=(T&& value) const
        {
+           IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
+
            return NamedType(std::forward<T>(value));
+
+           IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
        }
         template <typename U>
         NamedType operator=(U&& value) const
