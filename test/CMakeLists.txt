@@ -38,19 +38,19 @@ else()
 		-Wdouble-promotion
 		-Werror
 		-Wextra
-		-Wlogical-op
-		-Wnoexcept
 		-Wold-style-cast
 		-Woverloaded-virtual
 		-Wpedantic
 		-Wredundant-decls
 		-Wstack-protector
-		-Wstrict-null-sentinel
 		-Wzero-as-null-pointer-constant
 		-Wfloat-equal
 		-Wshadow
-		-Wuseless-cast
 		-Weffc++
+        $<$<CXX_COMPILER_ID:GNU>:-Wlogical-op>
+        $<$<CXX_COMPILER_ID:GNU>:-Wnoexcept>
+        $<$<CXX_COMPILER_ID:GNU>:-Wstrict-null-sentinel>
+        $<$<CXX_COMPILER_ID:GNU>:-Wuseless-cast>
 	)
 endif()
 
