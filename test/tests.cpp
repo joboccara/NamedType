@@ -564,3 +564,14 @@ TEST_CASE("Arithmetic")
     a /= b;
     CHECK(a.get() == 5);
 }
+
+TEST_CASE("Version macros are defined")
+{
+    static_assert(NAMED_TYPE_VERSION_MAJOR >= 1, "");
+    static_assert(NAMED_TYPE_VERSION_MINOR >= 0, "");
+    static_assert(NAMED_TYPE_VERSION_PATCH >= 0, "");
+
+    std::stringstream ss;
+    ss << NAMED_TYPE_VERSION_MAJOR << '.' << NAMED_TYPE_VERSION_MINOR << '.' << NAMED_TYPE_VERSION_PATCH;
+    CHECK(ss.str() == NAMED_TYPE_VERSION);
+}

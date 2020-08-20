@@ -19,6 +19,7 @@ target_sources(${PROJECT_NAME} INTERFACE
 	"include/NamedType/named_type.hpp"
 	"include/NamedType/named_type_impl.hpp"
 	"include/NamedType/underlying_functionalities.hpp"
+	"include/NamedType/version.hpp"
 )
 
 set(ENABLE_TEST ON CACHE BOOL "Enable test")
