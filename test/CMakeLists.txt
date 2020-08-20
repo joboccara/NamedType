@@ -5,6 +5,7 @@ project(NamedTypeTest CXX)
 enable_testing()
 
 set(testSources
+	"main.cpp"
 	"tests.cpp"
 	"catch.hpp"
 )
