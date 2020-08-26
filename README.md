@@ -103,6 +103,6 @@ void displayName(FirstName const& theFirstName, LastName const& theLastName);
 displayName(firstName = "John", lastName = "Doe");
 ```
 
-You can have a look at main.cpp for usage examples.
+You can have a look at tests.cpp for usage examples.
 
 <a href="https://www.patreon.com/join/fluentcpp?"><img alt="become a patron" src="https://c5.patreon.com/external/logo/become_a_patron_button.png" height="35px"></a>
