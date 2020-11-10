@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project(NamedTypeTest CXX)
 
-enable_testing()
-
 set(testSources
 	"main.cpp"
 	"tests.cpp"

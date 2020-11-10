@@ -25,5 +25,6 @@ target_sources(${PROJECT_NAME} INTERFACE
 set(ENABLE_TEST ON CACHE BOOL "Enable test")
 
 if (ENABLE_TEST AND ${MASTER_PROJECT})
-	add_subdirectory(test)
+    enable_testing()
+    add_subdirectory(test)
 endif()
