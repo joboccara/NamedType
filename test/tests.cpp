@@ -584,3 +584,35 @@ TEST_CASE("Printable")
     oss << StrongInt( 42 );
     CHECK(oss.str() == "42");
 }
+
+TEST_CASE("Dereferencable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Dereferencable>;
+
+    {
+        StrongInt a{1};
+        int& value = *a;
+        CHECK( value == 1 );
+    }
+
+    {
+        const StrongInt a{1};
+        const int& value = *a;
+        CHECK( value == 1 );
+    }
+
+    {
+        StrongInt a{1};
+        int& value = *a;
+        value = 2;
+        CHECK( a.get() == 2 );
+    }
+
+    {
+        auto functionReturningStrongInt = []() { return StrongInt{28}; };
+        auto functionTakingInt = []( int value ) { return value; };
+
+        int value = functionTakingInt( *functionReturningStrongInt() );
+        CHECK( value == 28 );
+    }
+}

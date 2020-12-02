@@ -263,6 +263,23 @@ struct Comparable : crtp<T, Comparable>
     }
 };
 
+template< typename T >
+struct Dereferencable;
+
+template< typename T, typename Parameter, template< typename > class ... Skills >
+struct Dereferencable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, Dereferencable>
+{
+    T& operator*() &
+    {
+        return this->underlying().get();
+    }
+
+    std::remove_reference_t<T> const& operator*() const &
+    {
+        return this->underlying().get();
+    }
+};
+
 template <typename Destination>
 struct ImplicitlyConvertibleTo
 {
