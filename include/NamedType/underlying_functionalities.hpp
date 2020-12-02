@@ -263,15 +263,6 @@ struct Comparable : crtp<T, Comparable>
     }
 };
 
-template <typename T>
-struct Printable : crtp<T, Printable>
-{
-    void print(std::ostream& os) const
-    {
-        os << this->underlying().get();
-    }
-};
-
 template <typename Destination>
 struct ImplicitlyConvertibleTo
 {
@@ -285,8 +276,20 @@ struct ImplicitlyConvertibleTo
     };
 };
 
+template <typename T>
+struct Printable : crtp<T, Printable>
+{
+    static constexpr bool is_printable = true;
+
+    void print(std::ostream& os) const
+    {
+        os << this->underlying().get();
+    }
+};
+
 template <typename T, typename Parameter, template <typename> class... Skills>
-std::ostream& operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
+typename std::enable_if<NamedType<T, Parameter, Skills...>::is_printable, std::ostream&>::type
+operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
 {
     object.print(os);
     return os;

@@ -575,3 +575,12 @@ TEST_CASE("Version macros are defined")
     ss << NAMED_TYPE_VERSION_MAJOR << '.' << NAMED_TYPE_VERSION_MINOR << '.' << NAMED_TYPE_VERSION_PATCH;
     CHECK(ss.str() == NAMED_TYPE_VERSION);
 }
+
+TEST_CASE("Printable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Printable>;
+
+    std::ostringstream oss;
+    oss << StrongInt( 42 );
+    CHECK(oss.str() == "42");
+}
