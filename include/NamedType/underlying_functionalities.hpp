@@ -376,11 +376,11 @@ struct MethodCallable;
 template <typename T, typename Parameter, template <typename> class... Skills>
 struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, MethodCallable>
 {
-    constexpr std::remove_reference_t<T> const* operator->() const
+    FLUENT_CONSTEXPR17 std::remove_reference_t<T> const* operator->() const
     {
         return std::addressof(this->underlying().get());
     }
-    constexpr std::remove_reference_t<T>* operator->()
+    FLUENT_CONSTEXPR17 std::remove_reference_t<T>* operator->()
     {
         return std::addressof(this->underlying().get());
     }

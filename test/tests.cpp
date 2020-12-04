@@ -710,7 +710,8 @@ TEST_CASE("Method callable")
     REQUIRE(constStrongA->constMethod() == 42);
 }
 
-TEST_CASE("Method callable constexpr")
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("Method callable constexpr C++17")
 {
     class A
     {
@@ -739,6 +740,7 @@ TEST_CASE("Method callable constexpr")
     static_assert( StrongA(A(42))->method() == 42, "MethodCallable is not constexpr");
     static_assert(constStrongA->constMethod() == 42, "MethodCallable is not constexpr");
 }
+#endif
 
 TEST_CASE("Callable")
 {
