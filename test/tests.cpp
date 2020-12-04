@@ -130,6 +130,15 @@ TEST_CASE("Addable")
     REQUIRE((+s1).get() == 12);
 }
 
+TEST_CASE("Addable constexpr")
+{
+    using AddableType = fluent::NamedType<int, struct AddableTag, fluent::Addable>;
+    constexpr AddableType s1(12);
+    constexpr AddableType s2(10);
+    static_assert((s1 + s2).get() == 22, "Addable is not constexpr");
+    static_assert((+s1).get() == 12, "Addable is not constexpr");
+}
+
 TEST_CASE("BinaryAddable")
 {
     using BinaryAddableType = fluent::NamedType<int, struct BinaryAddableTag, fluent::BinaryAddable>;
@@ -138,11 +147,26 @@ TEST_CASE("BinaryAddable")
     REQUIRE((s1 + s2).get() == 22);
 }
 
+TEST_CASE("BinaryAddable constexpr")
+{
+    using BinaryAddableType = fluent::NamedType<int, struct BinaryAddableTag, fluent::BinaryAddable>;
+    constexpr BinaryAddableType s1(12);
+    constexpr BinaryAddableType s2(10);
+    static_assert((s1 + s2).get() == 22, "BinaryAddable is not constexpr");
+}
+
 TEST_CASE("UnaryAddable")
 {
     using UnaryAddableType = fluent::NamedType<int, struct UnaryAddableTag, fluent::UnaryAddable>;
     UnaryAddableType s1(12);
     REQUIRE((+s1).get() == 12);
+}
+
+TEST_CASE("UnaryAddable constexpr")
+{
+    using UnaryAddableType = fluent::NamedType<int, struct UnaryAddableTag, fluent::UnaryAddable>;
+    constexpr UnaryAddableType s1(12);
+    static_assert((+s1).get() == 12, "UnaryAddable is not constexpr");
 }
 
 TEST_CASE("Subtractable")
@@ -154,12 +178,29 @@ TEST_CASE("Subtractable")
     REQUIRE((-s1).get() == -12);
 }
 
+TEST_CASE("Subtractable constexpr")
+{
+    using SubtractableType = fluent::NamedType<int, struct SubtractableTag, fluent::Subtractable>;
+    constexpr SubtractableType s1(12);
+    constexpr SubtractableType s2(10);
+    static_assert((s1 - s2).get() == 2, "Subtractable is not constexpr");
+    static_assert((-s1).get() == -12, "Subtractable is not constexpr");
+}
+
 TEST_CASE("BinarySubtractable")
 {
     using BinarySubtractableType = fluent::NamedType<int, struct BinarySubtractableTag, fluent::BinarySubtractable>;
     BinarySubtractableType s1(12);
     BinarySubtractableType s2(10);
     REQUIRE((s1 - s2).get() == 2);
+}
+
+TEST_CASE("BinarySubtractable constexpr")
+{
+    using BinarySubtractableType = fluent::NamedType<int, struct BinarySubtractableTag, fluent::BinarySubtractable>;
+    constexpr BinarySubtractableType s1(12);
+    constexpr BinarySubtractableType s2(10);
+    static_assert((s1 - s2).get() == 2, "BinarySubtractable is not constexpr");
 }
 
 TEST_CASE("UnarySubtractable")
@@ -169,6 +210,14 @@ TEST_CASE("UnarySubtractable")
     REQUIRE((-s).get() == -12);
 }
 
+TEST_CASE("UnarySubtractable constexpr")
+{
+    using UnarySubtractableType = fluent::NamedType<int, struct UnarySubtractableTag, fluent::UnarySubtractable>;
+    constexpr UnarySubtractableType s(12);
+    static_assert((-s).get() == -12, "UnarySubtractable is not constexpr");
+}
+
+
 TEST_CASE("Multiplicable")
 {
     using MultiplicableType = fluent::NamedType<int, struct MultiplicableTag, fluent::Multiplicable>;
@@ -177,6 +226,14 @@ TEST_CASE("Multiplicable")
     REQUIRE((s1 * s2).get() == 120);
     s1 *= s2;
     REQUIRE(s1.get() == 120);
+}
+
+TEST_CASE("Multiplicable constexpr")
+{
+    using MultiplicableType = fluent::NamedType<int, struct MultiplicableTag, fluent::Multiplicable>;
+    constexpr MultiplicableType s1(12);
+    constexpr MultiplicableType s2(10);
+    static_assert((s1 * s2).get() == 120, "Multiplicable is not constexpr");
 }
 
 TEST_CASE("Divisible")
@@ -189,6 +246,15 @@ TEST_CASE("Divisible")
     REQUIRE(s1.get() == 12);
 }
 
+TEST_CASE("Divisible constexpr")
+{
+    using DivisibleType = fluent::NamedType<int, struct DivisibleTag, fluent::Divisible>;
+    constexpr DivisibleType s1(120);
+    constexpr DivisibleType s2(10);
+    static_assert((s1 / s2).get() == 12, "Divisible is not constexpr");
+}
+
+
 TEST_CASE("Modulable")
 {
     using ModulableType = fluent::NamedType<int, struct ModulableTag, fluent::Modulable>;
@@ -199,11 +265,26 @@ TEST_CASE("Modulable")
     CHECK(s1.get() == 1);
 }
 
+TEST_CASE("Modulable constexpr")
+{
+    using ModulableType = fluent::NamedType<int, struct ModulableTag, fluent::Modulable>;
+    constexpr ModulableType s1(5);
+    constexpr ModulableType s2(2);
+    static_assert((s1 % s2).get() == 1, "Modulable is not constexpr");
+}
+
 TEST_CASE("BitWiseInvertable")
 {
     using BitWiseInvertableType = fluent::NamedType<int, struct BitWiseInvertableTag, fluent::BitWiseInvertable>;
     BitWiseInvertableType s1(13);
     CHECK((~s1).get() == (~13));
+}
+
+TEST_CASE("BitWiseInvertable constexpr")
+{
+    using BitWiseInvertableType = fluent::NamedType<int, struct BitWiseInvertableTag, fluent::BitWiseInvertable>;
+    constexpr BitWiseInvertableType s1(13);
+    static_assert((~s1).get() == (~13), "BitWiseInvertable is not constexpr");
 }
 
 TEST_CASE("BitWiseAndable")
@@ -216,6 +297,14 @@ TEST_CASE("BitWiseAndable")
     CHECK(s1.get() == (2 & 64));
 }
 
+TEST_CASE("BitWiseAndable constexpr")
+{
+    using BitWiseAndableType = fluent::NamedType<int, struct BitWiseAndableTag, fluent::BitWiseAndable>;
+    constexpr BitWiseAndableType s1(2);
+    constexpr BitWiseAndableType s2(64);
+    static_assert((s1 & s2).get() == (2 & 64), "BitWiseAndable is not constexpr");
+}
+
 TEST_CASE("BitWiseOrable")
 {
     using BitWiseOrableType = fluent::NamedType<int, struct BitWiseOrableTag, fluent::BitWiseOrable>;
@@ -226,6 +315,14 @@ TEST_CASE("BitWiseOrable")
     CHECK(s1.get() == (2 | 64));
 }
 
+TEST_CASE("BitWiseOrable constexpr")
+{
+    using BitWiseOrableType = fluent::NamedType<int, struct BitWiseOrableTag, fluent::BitWiseOrable>;
+    constexpr BitWiseOrableType s1(2);
+    constexpr BitWiseOrableType s2(64);
+    static_assert((s1 | s2).get() == (2 | 64), "BitWiseOrable is not constexpr");
+}
+
 TEST_CASE("BitWiseXorable")
 {
     using BitWiseXorableType = fluent::NamedType<int, struct BitWiseXorableTag, fluent::BitWiseXorable>;
@@ -234,6 +331,14 @@ TEST_CASE("BitWiseXorable")
     CHECK((s1 ^ s2).get() == (2 ^ 64));
     s1 ^= s2;
     CHECK(s1.get() == (2 ^ 64));
+}
+
+TEST_CASE("BitWiseXorable constexpr")
+{
+    using BitWiseXorableType = fluent::NamedType<int, struct BitWiseXorableTag, fluent::BitWiseXorable>;
+    constexpr BitWiseXorableType s1(2);
+    constexpr BitWiseXorableType s2(64);
+    static_assert((s1 ^ s2).get() == (2 ^ 64), "BitWiseXorable is not constexpr");
 }
 
 TEST_CASE("BitWiseLeftShiftable")
@@ -247,6 +352,15 @@ TEST_CASE("BitWiseLeftShiftable")
     CHECK(s1.get() == (2 << 3));
 }
 
+TEST_CASE("BitWiseLeftShiftable constexpr")
+{
+    using BitWiseLeftShiftableType =
+        fluent::NamedType<int, struct BitWiseLeftShiftableTag, fluent::BitWiseLeftShiftable>;
+    constexpr BitWiseLeftShiftableType s1(2);
+    constexpr BitWiseLeftShiftableType s2(3);
+    static_assert((s1 << s2).get() == (2 << 3), "BitWiseLeftShiftable is not constexpr");
+}
+
 TEST_CASE("BitWiseRightShiftable")
 {
     using BitWiseRightShiftableType =
@@ -256,6 +370,15 @@ TEST_CASE("BitWiseRightShiftable")
     CHECK((s1 >> s2).get() == (2 >> 3));
     s1 >>= s2;
     CHECK(s1.get() == (2 >> 3));
+}
+
+TEST_CASE("BitWiseRightShiftable constexpr")
+{
+    using BitWiseRightShiftableType =
+        fluent::NamedType<int, struct BitWiseRightShiftableTag, fluent::BitWiseRightShiftable>;
+    constexpr BitWiseRightShiftableType s1(2);
+    constexpr BitWiseRightShiftableType s2(3);
+    static_assert((s1 >> s2).get() == (2 >> 3), "BitWiseRightShiftable is not constexpr");
 }
 
 TEST_CASE("Comparable")
@@ -615,6 +738,14 @@ TEST_CASE("Dereferencable")
         int value = functionTakingInt( *functionReturningStrongInt() );
         CHECK( value == 28 );
     }
+}
+
+TEST_CASE("Dereferencable constexpr")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Dereferencable>;
+
+    constexpr StrongInt a{28};
+    static_assert( *a, "Dereferencable is not constexpr");
 }
 
 TEST_CASE("PreIncrementable")

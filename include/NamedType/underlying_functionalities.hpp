@@ -68,7 +68,10 @@ struct PostDecrementable : crtp<T, PostDecrementable>
 template <typename T>
 struct BinaryAddable : crtp<T, BinaryAddable>
 {
-   T operator+(T const& other) const { return T(this->underlying().get() + other.get()); }
+    constexpr T operator+(T const& other) const
+    {
+        return T(this->underlying().get() + other.get());
+    }
     T& operator+=(T const& other)
     {
         this->underlying().get() += other.get();
@@ -79,7 +82,10 @@ struct BinaryAddable : crtp<T, BinaryAddable>
 template <typename T>
 struct UnaryAddable : crtp<T, UnaryAddable>
 {
-   T operator+() const { return T(+this->underlying().get()); }
+    constexpr T operator+() const
+    {
+        return T(+this->underlying().get());
+    }
 };
 
 template <typename T>
@@ -92,7 +98,10 @@ struct Addable : BinaryAddable<T>, UnaryAddable<T>
 template <typename T>
 struct BinarySubtractable : crtp<T, BinarySubtractable>
 {
-   T operator-(T const& other) const { return T(this->underlying().get() - other.get()); }
+    constexpr T operator-(T const& other) const
+    {
+        return T(this->underlying().get() - other.get());
+    }
     T& operator-=(T const& other)
     {
         this->underlying().get() -= other.get();
@@ -103,7 +112,10 @@ struct BinarySubtractable : crtp<T, BinarySubtractable>
 template <typename T>
 struct UnarySubtractable : crtp<T, UnarySubtractable>
 {
-   T operator-() const { return T(-this->underlying().get()); }
+    constexpr T operator-() const
+    {
+        return T(-this->underlying().get());
+    }
 };
    
 template <typename T>
@@ -116,7 +128,7 @@ struct Subtractable : BinarySubtractable<T>, UnarySubtractable<T>
 template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
 {
-    T operator*(T const& other) const
+    constexpr T operator*(T const& other) const
     {
         return T(this->underlying().get() * other.get());
     }
@@ -130,7 +142,7 @@ struct Multiplicable : crtp<T, Multiplicable>
 template <typename T>
 struct Divisible : crtp<T, Divisible>
 {
-    T operator/(T const& other) const
+    constexpr T operator/(T const& other) const
     {
         return T(this->underlying().get() / other.get());
     }
@@ -144,7 +156,7 @@ struct Divisible : crtp<T, Divisible>
 template <typename T>
 struct Modulable : crtp<T, Modulable>
 {
-    T operator%(T const& other) const
+    constexpr T operator%(T const& other) const
     {
         return T(this->underlying().get() % other.get());
     }
@@ -158,7 +170,7 @@ struct Modulable : crtp<T, Modulable>
 template <typename T>
 struct BitWiseInvertable : crtp<T, BitWiseInvertable>
 {
-    T operator~() const
+    constexpr T operator~() const
     {
         return T(~this->underlying().get());
     }
@@ -167,7 +179,7 @@ struct BitWiseInvertable : crtp<T, BitWiseInvertable>
 template <typename T>
 struct BitWiseAndable : crtp<T, BitWiseAndable>
 {
-    T operator&(T const& other) const
+    constexpr T operator&(T const& other) const
     {
         return T(this->underlying().get() & other.get());
     }
@@ -181,7 +193,7 @@ struct BitWiseAndable : crtp<T, BitWiseAndable>
 template <typename T>
 struct BitWiseOrable : crtp<T, BitWiseOrable>
 {
-    T operator|(T const& other) const
+    constexpr T operator|(T const& other) const
     {
         return T(this->underlying().get() | other.get());
     }
@@ -195,7 +207,7 @@ struct BitWiseOrable : crtp<T, BitWiseOrable>
 template <typename T>
 struct BitWiseXorable : crtp<T, BitWiseXorable>
 {
-    T operator^(T const& other) const
+    constexpr T operator^(T const& other) const
     {
         return T(this->underlying().get() ^ other.get());
     }
@@ -209,7 +221,7 @@ struct BitWiseXorable : crtp<T, BitWiseXorable>
 template <typename T>
 struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
 {
-    T operator<<(T const& other) const
+    constexpr T operator<<(T const& other) const
     {
         return T(this->underlying().get() << other.get());
     }
@@ -223,7 +235,7 @@ struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
 template <typename T>
 struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 {
-    T operator>>(T const& other) const
+    constexpr T operator>>(T const& other) const
     {
         return T(this->underlying().get() >> other.get());
     }
@@ -269,12 +281,11 @@ struct Dereferencable;
 template< typename T, typename Parameter, template< typename > class ... Skills >
 struct Dereferencable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, Dereferencable>
 {
-    T& operator*() &
+    constexpr T& operator*() &
     {
         return this->underlying().get();
     }
-
-    std::remove_reference_t<T> const& operator*() const &
+    constexpr std::remove_reference_t<T> const& operator*() const &
     {
         return this->underlying().get();
     }
