@@ -338,7 +338,7 @@ TEST_CASE("BitWiseXorable constexpr")
     using BitWiseXorableType = fluent::NamedType<int, struct BitWiseXorableTag, fluent::BitWiseXorable>;
     constexpr BitWiseXorableType s1(2);
     constexpr BitWiseXorableType s2(64);
-    static_assert((s1 ^ s2).get() == (2 ^ 64), "BitWiseXorable is not constexpr");
+    static_assert((s1 ^ s2).get() == 66, "BitWiseXorable is not constexpr");
 }
 
 TEST_CASE("BitWiseLeftShiftable")
