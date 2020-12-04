@@ -153,8 +153,17 @@ TEST_CASE("BinaryAddable constexpr")
     constexpr BinaryAddableType s1(12);
     constexpr BinaryAddableType s2(10);
     static_assert((s1 + s2).get() == 22, "BinaryAddable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BinaryAddable constexpr C++17")
+{
+    using BinaryAddableType = fluent::NamedType<int, struct BinaryAddableTag, fluent::BinaryAddable>;
+    constexpr BinaryAddableType s1(12);
+    constexpr BinaryAddableType s2(10);
     static_assert(BinaryAddableType{12}.operator+=( s2 ).get() == 22, "BinaryAddable is not constexpr");
 }
+#endif
 
 TEST_CASE("UnaryAddable")
 {
@@ -202,8 +211,16 @@ TEST_CASE("BinarySubtractable constexpr")
     constexpr BinarySubtractableType s1(12);
     constexpr BinarySubtractableType s2(10);
     static_assert((s1 - s2).get() == 2, "BinarySubtractable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BinarySubtractable constexpr C++17")
+{
+    using BinarySubtractableType = fluent::NamedType<int, struct BinarySubtractableTag, fluent::BinarySubtractable>;
+    constexpr BinarySubtractableType s2(10);
     static_assert(BinarySubtractableType{12}.operator-=( s2 ).get() == 2, "BinarySubtractable is not constexpr");
 }
+#endif
 
 TEST_CASE("UnarySubtractable")
 {
@@ -236,8 +253,16 @@ TEST_CASE("Multiplicable constexpr")
     constexpr MultiplicableType s1(12);
     constexpr MultiplicableType s2(10);
     static_assert((s1 * s2).get() == 120, "Multiplicable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("Multiplicable constexpr C++17")
+{
+    using MultiplicableType = fluent::NamedType<int, struct MultiplicableTag, fluent::Multiplicable>;
+    constexpr MultiplicableType s2(10);
     static_assert(MultiplicableType{12}.operator*=( s2 ).get() == 120, "Multiplicable is not constexpr");
 }
+#endif
 
 TEST_CASE("Divisible")
 {
@@ -255,9 +280,16 @@ TEST_CASE("Divisible constexpr")
     constexpr DivisibleType s1(120);
     constexpr DivisibleType s2(10);
     static_assert((s1 / s2).get() == 12, "Divisible is not constexpr");
-    static_assert(DivisibleType{120}.operator/=( s2 ).get() == 12, "Divisible is not constexpr");
 }
 
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("Divisible constexpr C++17")
+{
+    using DivisibleType = fluent::NamedType<int, struct DivisibleTag, fluent::Divisible>;
+    constexpr DivisibleType s2(10);
+    static_assert(DivisibleType{120}.operator/=( s2 ).get() == 12, "Divisible is not constexpr");
+}
+#endif
 
 TEST_CASE("Modulable")
 {
@@ -275,8 +307,16 @@ TEST_CASE("Modulable constexpr")
     constexpr ModulableType s1(5);
     constexpr ModulableType s2(2);
     static_assert((s1 % s2).get() == 1, "Modulable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("Modulable constexpr C++17")
+{
+    using ModulableType = fluent::NamedType<int, struct ModulableTag, fluent::Modulable>;
+    constexpr ModulableType s2(2);
     static_assert(ModulableType{5}.operator%=( s2 ).get() == 1, "Modulable is not constexpr");
 }
+#endif
 
 TEST_CASE("BitWiseInvertable")
 {
@@ -308,8 +348,16 @@ TEST_CASE("BitWiseAndable constexpr")
     constexpr BitWiseAndableType s1(2);
     constexpr BitWiseAndableType s2(64);
     static_assert((s1 & s2).get() == (2 & 64), "BitWiseAndable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BitWiseAndable constexpr C++17")
+{
+    using BitWiseAndableType = fluent::NamedType<int, struct BitWiseAndableTag, fluent::BitWiseAndable>;
+    constexpr BitWiseAndableType s2(64);
     static_assert(BitWiseAndableType{2}.operator&=( s2 ).get() == (2 & 64), "BitWiseAndable is not constexpr");
 }
+#endif
 
 TEST_CASE("BitWiseOrable")
 {
@@ -327,8 +375,16 @@ TEST_CASE("BitWiseOrable constexpr")
     constexpr BitWiseOrableType s1(2);
     constexpr BitWiseOrableType s2(64);
     static_assert((s1 | s2).get() == (2 | 64), "BitWiseOrable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BitWiseOrable constexpr C++17")
+{
+    using BitWiseOrableType = fluent::NamedType<int, struct BitWiseOrableTag, fluent::BitWiseOrable>;
+    constexpr BitWiseOrableType s2(64);
     static_assert(BitWiseOrableType{2}.operator|=( s2 ).get() == (2 | 64), "BitWiseOrable is not constexpr");
 }
+#endif
 
 TEST_CASE("BitWiseXorable")
 {
@@ -346,8 +402,16 @@ TEST_CASE("BitWiseXorable constexpr")
     constexpr BitWiseXorableType s1(2);
     constexpr BitWiseXorableType s2(64);
     static_assert((s1 ^ s2).get() == 66, "BitWiseXorable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BitWiseXorable constexpr C++17")
+{
+    using BitWiseXorableType = fluent::NamedType<int, struct BitWiseXorableTag, fluent::BitWiseXorable>;
+    constexpr BitWiseXorableType s2(64);
     static_assert(BitWiseXorableType{2}.operator^=( s2 ).get() == 66, "BitWiseXorable is not constexpr");
 }
+#endif
 
 TEST_CASE("BitWiseLeftShiftable")
 {
@@ -367,8 +431,17 @@ TEST_CASE("BitWiseLeftShiftable constexpr")
     constexpr BitWiseLeftShiftableType s1(2);
     constexpr BitWiseLeftShiftableType s2(3);
     static_assert((s1 << s2).get() == (2 << 3), "BitWiseLeftShiftable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BitWiseLeftShiftable constexpr C++17")
+{
+    using BitWiseLeftShiftableType =
+        fluent::NamedType<int, struct BitWiseLeftShiftableTag, fluent::BitWiseLeftShiftable>;
+    constexpr BitWiseLeftShiftableType s2(3);
     static_assert(BitWiseLeftShiftableType{2}.operator<<=( s2 ).get() == (2 << 3 ), "BitWiseLeftShiftable is not constexpr");
 }
+#endif
 
 TEST_CASE("BitWiseRightShiftable")
 {
@@ -388,8 +461,17 @@ TEST_CASE("BitWiseRightShiftable constexpr")
     constexpr BitWiseRightShiftableType s1(2);
     constexpr BitWiseRightShiftableType s2(3);
     static_assert((s1 >> s2).get() == (2 >> 3), "BitWiseRightShiftable is not constexpr");
+}
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("BitWiseRightShiftable constexpr C++17")
+{
+    using BitWiseRightShiftableType =
+        fluent::NamedType<int, struct BitWiseRightShiftableTag, fluent::BitWiseRightShiftable>;
+    constexpr BitWiseRightShiftableType s2(3);
     static_assert(BitWiseRightShiftableType{2}.operator>>=( s2 ).get() == (2 >> 3 ), "BitWiseRightShiftable is not constexpr");
 }
+#endif
 
 TEST_CASE("Comparable")
 {
@@ -846,7 +928,7 @@ TEST_CASE("PreIncrementable")
 }
 
 #if FLUENT_CPP17_PRESENT
-TEST_CASE("PreIncrementable constexpr")
+TEST_CASE("PreIncrementable constexpr C++17")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PreIncrementable>;
     static_assert( (++StrongInt{1}).get() == 2, "PreIncrementable is not constexpr");
@@ -863,7 +945,7 @@ TEST_CASE("PostIncrementable")
 }
 
 #if FLUENT_CPP17_PRESENT
-TEST_CASE("PostIncrementable constexpr")
+TEST_CASE("PostIncrementable constexpr C++17")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostIncrementable>;
     static_assert( (StrongInt{1}++).get() == 1, "PostIncrementable is not constexpr");
@@ -880,7 +962,7 @@ TEST_CASE("PreDecrementable")
 }
 
 #if FLUENT_CPP17_PRESENT
-TEST_CASE("PreDecrementable constexpr")
+TEST_CASE("PreDecrementable constexpr C++17")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PreDecrementable>;
     static_assert( (--StrongInt{1}).get() == 0, "PreDecrementable is not constexpr");
@@ -897,7 +979,7 @@ TEST_CASE("PostDecrementable")
 }
 
 #if FLUENT_CPP17_PRESENT
-TEST_CASE("PostDecrementable constexpr")
+TEST_CASE("PostDecrementable constexpr C++17")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostDecrementable>;
     static_assert( (StrongInt{1}--).get() == 1, "PostDecrementable is not constexpr");
