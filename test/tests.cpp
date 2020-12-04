@@ -153,6 +153,7 @@ TEST_CASE("BinaryAddable constexpr")
     constexpr BinaryAddableType s1(12);
     constexpr BinaryAddableType s2(10);
     static_assert((s1 + s2).get() == 22, "BinaryAddable is not constexpr");
+    static_assert(BinaryAddableType{12}.operator+=( s2 ).get() == 22, "BinaryAddable is not constexpr");
 }
 
 TEST_CASE("UnaryAddable")
@@ -201,6 +202,7 @@ TEST_CASE("BinarySubtractable constexpr")
     constexpr BinarySubtractableType s1(12);
     constexpr BinarySubtractableType s2(10);
     static_assert((s1 - s2).get() == 2, "BinarySubtractable is not constexpr");
+    static_assert(BinarySubtractableType{12}.operator-=( s2 ).get() == 2, "BinarySubtractable is not constexpr");
 }
 
 TEST_CASE("UnarySubtractable")
@@ -234,6 +236,7 @@ TEST_CASE("Multiplicable constexpr")
     constexpr MultiplicableType s1(12);
     constexpr MultiplicableType s2(10);
     static_assert((s1 * s2).get() == 120, "Multiplicable is not constexpr");
+    static_assert(MultiplicableType{12}.operator*=( s2 ).get() == 120, "Multiplicable is not constexpr");
 }
 
 TEST_CASE("Divisible")
@@ -252,6 +255,7 @@ TEST_CASE("Divisible constexpr")
     constexpr DivisibleType s1(120);
     constexpr DivisibleType s2(10);
     static_assert((s1 / s2).get() == 12, "Divisible is not constexpr");
+    static_assert(DivisibleType{120}.operator/=( s2 ).get() == 12, "Divisible is not constexpr");
 }
 
 
@@ -271,6 +275,7 @@ TEST_CASE("Modulable constexpr")
     constexpr ModulableType s1(5);
     constexpr ModulableType s2(2);
     static_assert((s1 % s2).get() == 1, "Modulable is not constexpr");
+    static_assert(ModulableType{5}.operator%=( s2 ).get() == 1, "Modulable is not constexpr");
 }
 
 TEST_CASE("BitWiseInvertable")
@@ -303,6 +308,7 @@ TEST_CASE("BitWiseAndable constexpr")
     constexpr BitWiseAndableType s1(2);
     constexpr BitWiseAndableType s2(64);
     static_assert((s1 & s2).get() == (2 & 64), "BitWiseAndable is not constexpr");
+    static_assert(BitWiseAndableType{2}.operator&=( s2 ).get() == (2 & 64), "BitWiseAndable is not constexpr");
 }
 
 TEST_CASE("BitWiseOrable")
@@ -321,6 +327,7 @@ TEST_CASE("BitWiseOrable constexpr")
     constexpr BitWiseOrableType s1(2);
     constexpr BitWiseOrableType s2(64);
     static_assert((s1 | s2).get() == (2 | 64), "BitWiseOrable is not constexpr");
+    static_assert(BitWiseOrableType{2}.operator|=( s2 ).get() == (2 | 64), "BitWiseOrable is not constexpr");
 }
 
 TEST_CASE("BitWiseXorable")
@@ -339,6 +346,7 @@ TEST_CASE("BitWiseXorable constexpr")
     constexpr BitWiseXorableType s1(2);
     constexpr BitWiseXorableType s2(64);
     static_assert((s1 ^ s2).get() == 66, "BitWiseXorable is not constexpr");
+    static_assert(BitWiseXorableType{2}.operator^=( s2 ).get() == 66, "BitWiseXorable is not constexpr");
 }
 
 TEST_CASE("BitWiseLeftShiftable")
@@ -359,6 +367,7 @@ TEST_CASE("BitWiseLeftShiftable constexpr")
     constexpr BitWiseLeftShiftableType s1(2);
     constexpr BitWiseLeftShiftableType s2(3);
     static_assert((s1 << s2).get() == (2 << 3), "BitWiseLeftShiftable is not constexpr");
+    static_assert(BitWiseLeftShiftableType{2}.operator<<=( s2 ).get() == (2 << 3 ), "BitWiseLeftShiftable is not constexpr");
 }
 
 TEST_CASE("BitWiseRightShiftable")
@@ -379,6 +388,7 @@ TEST_CASE("BitWiseRightShiftable constexpr")
     constexpr BitWiseRightShiftableType s1(2);
     constexpr BitWiseRightShiftableType s2(3);
     static_assert((s1 >> s2).get() == (2 >> 3), "BitWiseRightShiftable is not constexpr");
+    static_assert(BitWiseRightShiftableType{2}.operator>>=( s2 ).get() == (2 >> 3 ), "BitWiseRightShiftable is not constexpr");
 }
 
 TEST_CASE("Comparable")

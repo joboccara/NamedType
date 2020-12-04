@@ -88,7 +88,7 @@ struct BinaryAddable : crtp<T, BinaryAddable>
     {
         return T(this->underlying().get() + other.get());
     }
-    T& operator+=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator+=(T const& other)
     {
         this->underlying().get() += other.get();
         return this->underlying();
@@ -118,7 +118,7 @@ struct BinarySubtractable : crtp<T, BinarySubtractable>
     {
         return T(this->underlying().get() - other.get());
     }
-    T& operator-=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator-=(T const& other)
     {
         this->underlying().get() -= other.get();
         return this->underlying();
@@ -148,7 +148,7 @@ struct Multiplicable : crtp<T, Multiplicable>
     {
         return T(this->underlying().get() * other.get());
     }
-    T& operator*=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator*=(T const& other)
     {
         this->underlying().get() *= other.get();
         return this->underlying();
@@ -162,7 +162,7 @@ struct Divisible : crtp<T, Divisible>
     {
         return T(this->underlying().get() / other.get());
     }
-    T& operator/=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator/=(T const& other)
     {
         this->underlying().get() /= other.get();
         return this->underlying();
@@ -176,7 +176,7 @@ struct Modulable : crtp<T, Modulable>
     {
         return T(this->underlying().get() % other.get());
     }
-    T& operator%=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator%=(T const& other)
     {
         this->underlying().get() %= other.get();
         return this->underlying();
@@ -199,7 +199,7 @@ struct BitWiseAndable : crtp<T, BitWiseAndable>
     {
         return T(this->underlying().get() & other.get());
     }
-    T& operator&=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator&=(T const& other)
     {
         this->underlying().get() &= other.get();
         return this->underlying();
@@ -213,7 +213,7 @@ struct BitWiseOrable : crtp<T, BitWiseOrable>
     {
         return T(this->underlying().get() | other.get());
     }
-    T& operator|=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator|=(T const& other)
     {
         this->underlying().get() |= other.get();
         return this->underlying();
@@ -227,7 +227,7 @@ struct BitWiseXorable : crtp<T, BitWiseXorable>
     {
         return T(this->underlying().get() ^ other.get());
     }
-    T& operator^=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator^=(T const& other)
     {
         this->underlying().get() ^= other.get();
         return this->underlying();
@@ -241,7 +241,7 @@ struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
     {
         return T(this->underlying().get() << other.get());
     }
-    T& operator<<=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator<<=(T const& other)
     {
         this->underlying().get() <<= other.get();
         return this->underlying();
@@ -255,7 +255,7 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
     {
         return T(this->underlying().get() >> other.get());
     }
-    T& operator>>=(T const& other)
+    FLUENT_CONSTEXPR17 T& operator>>=(T const& other)
     {
         this->underlying().get() >>= other.get();
         return this->underlying();
