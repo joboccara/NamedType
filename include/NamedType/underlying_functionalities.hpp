@@ -249,27 +249,36 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 template <typename T>
 struct Comparable : crtp<T, Comparable>
 {
-    bool operator<(T const& other) const
+    constexpr bool operator<(T const& other) const
     {
         return this->underlying().get() < other.get();
     }
-    bool operator>(T const& other) const
+    constexpr bool operator>(T const& other) const
     {
         return other.get() < this->underlying().get();
     }
-    bool operator<=(T const& other) const
+    constexpr bool operator<=(T const& other) const
     {
         return !(other.get() < this->underlying().get());
     }
-    bool operator>=(T const& other) const
+    constexpr bool operator>=(T const& other) const
     {
         return !(*this < other);
     }
-    friend bool operator==(Comparable<T> const& self, T const& other)
+// On Visual Studio before 19.22, you cannot define constexpr with friend function
+// See: https://stackoverflow.com/a/60400110
+#if defined(_MSC_VER) && _MSC_VER < 1922
+    constexpr bool operator==(T const& other) const
+    {
+        return !(*this < other) && !(other.get() < this->underlying().get());
+    }
+#else
+    friend constexpr bool operator==(Comparable<T> const& self, T const& other)
     {
         return !(self < other) && !(other.get() < self.underlying().get());
     }
-    bool operator!=(T const& other) const
+#endif
+    constexpr bool operator!=(T const& other) const
     {
         return !(*this == other);
     }
