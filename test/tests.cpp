@@ -710,6 +710,36 @@ TEST_CASE("Method callable")
     REQUIRE(constStrongA->constMethod() == 42);
 }
 
+TEST_CASE("Method callable constexpr")
+{
+    class A
+    {
+    public:
+        constexpr A(int x_) : x(x_)
+        {
+        }
+        A(A const&) = delete; // ensures that invoking a method doesn't make a copy
+        A(A&&) = default;
+
+        constexpr int method()
+        {
+            return x;
+        }
+        constexpr int constMethod() const
+        {
+            return x;
+        }
+
+    private:
+        int x;
+    };
+
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::MethodCallable>;
+    constexpr const StrongA constStrongA(A((42)));
+    static_assert( StrongA(A(42))->method() == 42, "MethodCallable is not constexpr");
+    static_assert(constStrongA->constMethod() == 42, "MethodCallable is not constexpr");
+}
+
 TEST_CASE("Callable")
 {
     class A
