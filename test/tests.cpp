@@ -835,6 +835,14 @@ TEST_CASE("PreIncrementable")
     CHECK( b.get() == 2 );
 }
 
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("PreIncrementable constexpr")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PreIncrementable>;
+    static_assert( (++StrongInt{1}).get() == 2, "PreIncrementable is not constexpr");
+}
+#endif
+
 TEST_CASE("PostIncrementable")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostIncrementable>;
@@ -843,6 +851,14 @@ TEST_CASE("PostIncrementable")
     CHECK( a.get() == 2 );
     CHECK( b.get() == 1 );
 }
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("PostIncrementable constexpr")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostIncrementable>;
+    static_assert( (StrongInt{1}++).get() == 1, "PostIncrementable is not constexpr");
+}
+#endif
 
 TEST_CASE("PreDecrementable")
 {
@@ -853,6 +869,14 @@ TEST_CASE("PreDecrementable")
     CHECK( b.get() == 0 );
 }
 
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("PreDecrementable constexpr")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PreDecrementable>;
+    static_assert( (--StrongInt{1}).get() == 0, "PreDecrementable is not constexpr");
+}
+#endif
+
 TEST_CASE("PostDecrementable")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostDecrementable>;
@@ -861,3 +885,11 @@ TEST_CASE("PostDecrementable")
     CHECK( a.get() == 0 );
     CHECK( b.get() == 1 );
 }
+
+#if FLUENT_CPP17_PRESENT
+TEST_CASE("PostDecrementable constexpr")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostDecrementable>;
+    static_assert( (StrongInt{1}--).get() == 1, "PostDecrementable is not constexpr");
+}
+#endif

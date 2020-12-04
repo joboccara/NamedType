@@ -8,6 +8,22 @@
 #include <iostream>
 #include <memory>
 
+// C++17 detection
+#if defined(_MSC_VER) && (defined(_HAS_CXX17) && _HAS_CXX17)
+#    define FLUENT_CPP17_PRESENT 1
+#elif __cplusplus >= 201703L
+#    define FLUENT_CPP17_PRESENT 1
+#else
+#    define FLUENT_CPP17_PRESENT 0
+#endif
+
+// C++17 constexpr additions
+#if FLUENT_CPP17_PRESENT
+#    define FLUENT_CONSTEXPR17 constexpr
+#else
+#    define FLUENT_CONSTEXPR17 
+#endif
+
 namespace fluent
 {
 
@@ -16,7 +32,7 @@ struct PreIncrementable : crtp<T, PreIncrementable>
 {
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
 
-    T& operator++()
+    FLUENT_CONSTEXPR17 T& operator++()
     {
         ++this->underlying().get();
         return this->underlying();
@@ -30,7 +46,7 @@ struct PostIncrementable : crtp<T, PostIncrementable>
 {
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
 
-    T operator++(int)
+    FLUENT_CONSTEXPR17 T operator++(int)
     {
         return T(this->underlying().get()++);
     }
@@ -43,7 +59,7 @@ struct PreDecrementable : crtp<T, PreDecrementable>
 {
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
 
-    T& operator--()
+    FLUENT_CONSTEXPR17 T& operator--()
     {
         --this->underlying().get();
         return this->underlying();
@@ -57,7 +73,7 @@ struct PostDecrementable : crtp<T, PostDecrementable>
 {
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_BEGIN
 
-    T operator--(int)
+    FLUENT_CONSTEXPR17 T operator--(int)
     {
         return T( this->underlying().get()-- );
     }
