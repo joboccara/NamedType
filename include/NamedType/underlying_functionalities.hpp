@@ -32,7 +32,7 @@ struct PostIncrementable : crtp<T, PostIncrementable>
 
     T operator++(int)
     {
-        return this->underlying().get()++;
+        return T(this->underlying().get()++);
     }
 
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END
@@ -59,7 +59,7 @@ struct PostDecrementable : crtp<T, PostDecrementable>
 
     T operator--(int)
     {
-        return this->underlying().get()--;
+        return T( this->underlying().get()-- );
     }
 
     IGNORE_SHOULD_RETURN_REFERENCE_TO_THIS_END

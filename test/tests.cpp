@@ -616,3 +616,51 @@ TEST_CASE("Dereferencable")
         CHECK( value == 28 );
     }
 }
+
+TEST_CASE("PreIncrementable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PreIncrementable>;
+
+    {
+        StrongInt a{1};
+        StrongInt b = ++a;
+        CHECK( a.get() == 2 );
+        CHECK( b.get() == 2 );
+    }
+}
+
+TEST_CASE("PostIncrementable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostIncrementable>;
+
+    {
+        StrongInt a{1};
+        StrongInt b = a++;
+        CHECK( a.get() == 2 );
+        CHECK( b.get() == 1 );
+    }
+}
+
+TEST_CASE("PreDecrementable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PreDecrementable>;
+
+    {
+        StrongInt a{1};
+        StrongInt b = --a;
+        CHECK( a.get() == 0 );
+        CHECK( b.get() == 0 );
+    }
+}
+
+TEST_CASE("PostDecrementable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::PostDecrementable>;
+
+    {
+        StrongInt a{1};
+        StrongInt b = a--;
+        CHECK( a.get() == 0 );
+        CHECK( b.get() == 1 );
+    }
+}
