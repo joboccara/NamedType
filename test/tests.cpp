@@ -445,6 +445,34 @@ TEST_CASE("ConvertibleWithOperator")
     REQUIRE(b.x == 42);
 }
 
+TEST_CASE("ConvertibleWithOperator constexpr")
+{
+    struct B
+    {
+        constexpr B(int x_) : x(x_)
+        {
+        }
+        int x;
+    };
+
+    struct A
+    {
+        constexpr A(int x_) : x(x_)
+        {
+        }
+        constexpr operator B() const
+        {
+            return B(x);
+        }
+        int x;
+    };
+
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::ImplicitlyConvertibleTo<B>::templ>;
+    constexpr StrongA strongA(A(42));
+    constexpr B b = strongA;
+    static_assert(b.x == 42, "ImplicitlyConvertibleTo is not constexpr");
+}
+
 TEST_CASE("ConvertibleWithConstructor")
 {
     struct A
@@ -469,12 +497,44 @@ TEST_CASE("ConvertibleWithConstructor")
     REQUIRE(b.x == 42);
 }
 
+TEST_CASE("ConvertibleWithConstructor constexpr")
+{
+    struct A
+    {
+        constexpr A(int x_) : x(x_)
+        {
+        }
+        int x;
+    };
+
+    struct B
+    {
+        constexpr B(A a) : x(a.x)
+        {
+        }
+        int x;
+    };
+
+    using StrongA = fluent::NamedType<A, struct StrongATag, fluent::ImplicitlyConvertibleTo<B>::templ>;
+    constexpr StrongA strongA(A(42));
+    constexpr B b = strongA;
+    static_assert(b.x == 42, "ImplicitlyConvertibleTo is not constexpr");
+}
+
 TEST_CASE("ConvertibleToItself")
 {
     using MyInt = fluent::NamedType<int, struct MyIntTag, fluent::ImplicitlyConvertibleTo<int>::templ>;
     MyInt myInt(42);
     int i = myInt;
     REQUIRE(i == 42);
+}
+
+TEST_CASE("ConvertibleToItself constexpr")
+{
+    using MyInt = fluent::NamedType<int, struct MyIntTag, fluent::ImplicitlyConvertibleTo<int>::templ>;
+    constexpr MyInt myInt(42);
+    constexpr int i = myInt;
+    static_assert(i == 42, "ImplicitlyConvertibleTo is not constexpr");
 }
 
 TEST_CASE("Hash")

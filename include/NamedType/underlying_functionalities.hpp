@@ -306,7 +306,7 @@ struct ImplicitlyConvertibleTo
     template <typename T>
     struct templ : crtp<T, templ>
     {
-        operator Destination() const
+        constexpr operator Destination() const
         {
             return this->underlying().get();
         }
