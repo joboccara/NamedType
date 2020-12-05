@@ -8,15 +8,6 @@
 #include <iostream>
 #include <memory>
 
-// C++17 detection
-#if defined(_MSC_VER) && (defined(_HAS_CXX17) && _HAS_CXX17)
-#    define FLUENT_CPP17_PRESENT 1
-#elif __cplusplus >= 201703L
-#    define FLUENT_CPP17_PRESENT 1
-#else
-#    define FLUENT_CPP17_PRESENT 0
-#endif
-
 // C++17 constexpr additions
 #if FLUENT_CPP17_PRESENT
 #    define FLUENT_CONSTEXPR17 constexpr
@@ -84,7 +75,7 @@ struct PostDecrementable : crtp<T, PostDecrementable>
 template <typename T>
 struct BinaryAddable : crtp<T, BinaryAddable>
 {
-    constexpr T operator+(T const& other) const
+    FLUENT_NODISCARD constexpr T operator+(T const& other) const
     {
         return T(this->underlying().get() + other.get());
     }
@@ -98,7 +89,7 @@ struct BinaryAddable : crtp<T, BinaryAddable>
 template <typename T>
 struct UnaryAddable : crtp<T, UnaryAddable>
 {
-    constexpr T operator+() const
+    FLUENT_NODISCARD constexpr T operator+() const
     {
         return T(+this->underlying().get());
     }
@@ -114,7 +105,7 @@ struct Addable : BinaryAddable<T>, UnaryAddable<T>
 template <typename T>
 struct BinarySubtractable : crtp<T, BinarySubtractable>
 {
-    constexpr T operator-(T const& other) const
+    FLUENT_NODISCARD constexpr T operator-(T const& other) const
     {
         return T(this->underlying().get() - other.get());
     }
@@ -128,7 +119,7 @@ struct BinarySubtractable : crtp<T, BinarySubtractable>
 template <typename T>
 struct UnarySubtractable : crtp<T, UnarySubtractable>
 {
-    constexpr T operator-() const
+    FLUENT_NODISCARD constexpr T operator-() const
     {
         return T(-this->underlying().get());
     }
@@ -144,7 +135,7 @@ struct Subtractable : BinarySubtractable<T>, UnarySubtractable<T>
 template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
 {
-    constexpr T operator*(T const& other) const
+    FLUENT_NODISCARD constexpr T operator*(T const& other) const
     {
         return T(this->underlying().get() * other.get());
     }
@@ -158,7 +149,7 @@ struct Multiplicable : crtp<T, Multiplicable>
 template <typename T>
 struct Divisible : crtp<T, Divisible>
 {
-    constexpr T operator/(T const& other) const
+    FLUENT_NODISCARD constexpr T operator/(T const& other) const
     {
         return T(this->underlying().get() / other.get());
     }
@@ -172,7 +163,7 @@ struct Divisible : crtp<T, Divisible>
 template <typename T>
 struct Modulable : crtp<T, Modulable>
 {
-    constexpr T operator%(T const& other) const
+    FLUENT_NODISCARD constexpr T operator%(T const& other) const
     {
         return T(this->underlying().get() % other.get());
     }
@@ -186,7 +177,7 @@ struct Modulable : crtp<T, Modulable>
 template <typename T>
 struct BitWiseInvertable : crtp<T, BitWiseInvertable>
 {
-    constexpr T operator~() const
+    FLUENT_NODISCARD constexpr T operator~() const
     {
         return T(~this->underlying().get());
     }
@@ -195,7 +186,7 @@ struct BitWiseInvertable : crtp<T, BitWiseInvertable>
 template <typename T>
 struct BitWiseAndable : crtp<T, BitWiseAndable>
 {
-    constexpr T operator&(T const& other) const
+    FLUENT_NODISCARD constexpr T operator&(T const& other) const
     {
         return T(this->underlying().get() & other.get());
     }
@@ -209,7 +200,7 @@ struct BitWiseAndable : crtp<T, BitWiseAndable>
 template <typename T>
 struct BitWiseOrable : crtp<T, BitWiseOrable>
 {
-    constexpr T operator|(T const& other) const
+    FLUENT_NODISCARD constexpr T operator|(T const& other) const
     {
         return T(this->underlying().get() | other.get());
     }
@@ -223,7 +214,7 @@ struct BitWiseOrable : crtp<T, BitWiseOrable>
 template <typename T>
 struct BitWiseXorable : crtp<T, BitWiseXorable>
 {
-    constexpr T operator^(T const& other) const
+    FLUENT_NODISCARD constexpr T operator^(T const& other) const
     {
         return T(this->underlying().get() ^ other.get());
     }
@@ -237,7 +228,7 @@ struct BitWiseXorable : crtp<T, BitWiseXorable>
 template <typename T>
 struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
 {
-    constexpr T operator<<(T const& other) const
+    FLUENT_NODISCARD constexpr T operator<<(T const& other) const
     {
         return T(this->underlying().get() << other.get());
     }
@@ -251,7 +242,7 @@ struct BitWiseLeftShiftable : crtp<T, BitWiseLeftShiftable>
 template <typename T>
 struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 {
-    constexpr T operator>>(T const& other) const
+    FLUENT_NODISCARD constexpr T operator>>(T const& other) const
     {
         return T(this->underlying().get() >> other.get());
     }
@@ -265,36 +256,36 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 template <typename T>
 struct Comparable : crtp<T, Comparable>
 {
-    constexpr bool operator<(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator<(T const& other) const
     {
         return this->underlying().get() < other.get();
     }
-    constexpr bool operator>(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator>(T const& other) const
     {
         return other.get() < this->underlying().get();
     }
-    constexpr bool operator<=(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator<=(T const& other) const
     {
         return !(other.get() < this->underlying().get());
     }
-    constexpr bool operator>=(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator>=(T const& other) const
     {
         return !(*this < other);
     }
 // On Visual Studio before 19.22, you cannot define constexpr with friend function
 // See: https://stackoverflow.com/a/60400110
 #if defined(_MSC_VER) && _MSC_VER < 1922
-    constexpr bool operator==(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator==(T const& other) const
     {
         return !(*this < other) && !(other.get() < this->underlying().get());
     }
 #else
-    friend constexpr bool operator==(Comparable<T> const& self, T const& other)
+    friend FLUENT_NODISCARD constexpr bool operator==(Comparable<T> const& self, T const& other)
     {
         return !(self < other) && !(other.get() < self.underlying().get());
     }
 #endif
-    constexpr bool operator!=(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator!=(T const& other) const
     {
         return !(*this == other);
     }
@@ -306,11 +297,11 @@ struct Dereferencable;
 template< typename T, typename Parameter, template< typename > class ... Skills >
 struct Dereferencable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, Dereferencable>
 {
-    constexpr T& operator*() &
+    FLUENT_NODISCARD constexpr T& operator*() &
     {
         return this->underlying().get();
     }
-    constexpr std::remove_reference_t<T> const& operator*() const &
+    FLUENT_NODISCARD constexpr std::remove_reference_t<T> const& operator*() const &
     {
         return this->underlying().get();
     }
@@ -322,7 +313,7 @@ struct ImplicitlyConvertibleTo
     template <typename T>
     struct templ : crtp<T, templ>
     {
-        constexpr operator Destination() const
+        FLUENT_NODISCARD constexpr operator Destination() const
         {
             return this->underlying().get();
         }
@@ -360,11 +351,11 @@ struct FunctionCallable;
 template <typename T, typename Parameter, template <typename> class... Skills>
 struct FunctionCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, FunctionCallable>
 {
-    constexpr operator T const&() const
+    FLUENT_NODISCARD constexpr operator T const&() const
     {
         return this->underlying().get();
     }
-    constexpr operator T&()
+    FLUENT_NODISCARD constexpr operator T&()
     {
         return this->underlying().get();
     }
@@ -376,11 +367,11 @@ struct MethodCallable;
 template <typename T, typename Parameter, template <typename> class... Skills>
 struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, MethodCallable>
 {
-    FLUENT_CONSTEXPR17 std::remove_reference_t<T> const* operator->() const
+    FLUENT_NODISCARD FLUENT_CONSTEXPR17 std::remove_reference_t<T> const* operator->() const
     {
         return std::addressof(this->underlying().get());
     }
-    FLUENT_CONSTEXPR17 std::remove_reference_t<T>* operator->()
+    FLUENT_NODISCARD FLUENT_CONSTEXPR17 std::remove_reference_t<T>* operator->()
     {
         return std::addressof(this->underlying().get());
     }

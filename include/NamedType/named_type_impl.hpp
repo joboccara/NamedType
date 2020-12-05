@@ -5,6 +5,26 @@
 #include <type_traits>
 #include <utility>
 
+// C++17 detection
+#if defined(_MSC_VER) && (defined(_HAS_CXX17) && _HAS_CXX17)
+#    define FLUENT_CPP17_PRESENT 1
+#elif __cplusplus >= 201703L
+#    define FLUENT_CPP17_PRESENT 1
+#else
+#    define FLUENT_CPP17_PRESENT 0
+#endif
+
+// Use [[nodiscard]] if available
+#ifndef FLUENT_NODISCARD_PRESENT
+#    define FLUENT_NODISCARD_PRESENT FLUENT_CPP17_PRESENT
+#endif
+
+#if FLUENT_NODISCARD_PRESENT
+#    define FLUENT_NODISCARD [[nodiscard]]
+#else
+#    define FLUENT_NODISCARD
+#endif
+
 // Enable empty base class optimization with multiple inheritance on Visual Studio.
 #if defined(_MSC_VER) && _MSC_VER >= 1910
 #    define FLUENT_EBCO __declspec(empty_bases)
@@ -50,12 +70,12 @@ public:
     }
 
     // get
-    constexpr T& get() noexcept
+    FLUENT_NODISCARD constexpr T& get() noexcept
     {
         return value_;
     }
 
-    constexpr std::remove_reference_t<T> const& get() const noexcept
+    FLUENT_NODISCARD constexpr std::remove_reference_t<T> const& get() const noexcept
     {
         return value_;
     }
