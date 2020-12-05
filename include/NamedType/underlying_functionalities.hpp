@@ -360,11 +360,11 @@ struct FunctionCallable;
 template <typename T, typename Parameter, template <typename> class... Skills>
 struct FunctionCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Parameter, Skills...>, FunctionCallable>
 {
-    operator T const&() const
+    constexpr operator T const&() const
     {
         return this->underlying().get();
     }
-    operator T&()
+    constexpr operator T&()
     {
         return this->underlying().get();
     }

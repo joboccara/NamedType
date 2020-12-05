@@ -679,6 +679,45 @@ TEST_CASE("Function callable")
     REQUIRE(strongA + strongA == 84);
 }
 
+struct testFunctionCallable_B
+{
+    constexpr testFunctionCallable_B(int x_) : x(x_)
+    {
+    }
+    // ensures that passing the argument to a function doesn't make a copy
+    testFunctionCallable_B(testFunctionCallable_B const&) = delete;
+    testFunctionCallable_B(testFunctionCallable_B&&) = default;
+    constexpr testFunctionCallable_B& operator+=(testFunctionCallable_B const& other)
+    {
+        x += other.x;
+        return *this;
+    }
+    int x;
+};
+
+constexpr testFunctionCallable_B operator+(testFunctionCallable_B const& a1, testFunctionCallable_B const& a2)
+{
+    return testFunctionCallable_B(a1.x + a2.x);
+}
+
+constexpr bool operator==(testFunctionCallable_B const& a1, testFunctionCallable_B const& a2)
+{
+    return a1.x == a2.x;
+}
+
+TEST_CASE("Function callable constexpr")
+{
+    using B = testFunctionCallable_B;
+    const auto functionTakingB = [](B const& b) constexpr { return b.x; };
+
+    using StrongB = fluent::NamedType<B, struct StrongATag, fluent::FunctionCallable>;
+    constexpr StrongB constStrongB(B(42));
+    static_assert(functionTakingB(StrongB(B(42))) == 42);
+    static_assert(functionTakingB(constStrongB) == 42);
+    static_assert(StrongB(B(42)) + StrongB(B(42)) == 84);
+    static_assert(constStrongB + constStrongB == 84);
+}
+
 TEST_CASE("Method callable")
 {
     class A
@@ -737,7 +776,7 @@ TEST_CASE("Method callable constexpr C++17")
 
     using StrongA = fluent::NamedType<A, struct StrongATag, fluent::MethodCallable>;
     constexpr const StrongA constStrongA(A((42)));
-    static_assert( StrongA(A(42))->method() == 42, "MethodCallable is not constexpr");
+    static_assert(StrongA(A(42))->method() == 42, "MethodCallable is not constexpr");
     static_assert(constStrongA->constMethod() == 42, "MethodCallable is not constexpr");
 }
 #endif
