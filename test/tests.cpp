@@ -705,17 +705,21 @@ constexpr bool operator==(testFunctionCallable_B const& a1, testFunctionCallable
     return a1.x == a2.x;
 }
 
+constexpr const int functionTakingB(testFunctionCallable_B const& b)
+{
+    return b.x;
+};
+
 TEST_CASE("Function callable constexpr")
 {
     using B = testFunctionCallable_B;
-    const auto functionTakingB = [](B const& b) constexpr { return b.x; };
 
     using StrongB = fluent::NamedType<B, struct StrongATag, fluent::FunctionCallable>;
     constexpr StrongB constStrongB(B(42));
-    static_assert(functionTakingB(StrongB(B(42))) == 42);
-    static_assert(functionTakingB(constStrongB) == 42);
-    static_assert(StrongB(B(42)) + StrongB(B(42)) == 84);
-    static_assert(constStrongB + constStrongB == 84);
+    static_assert(functionTakingB(StrongB(B(42))) == 42, "FunctionCallable is not constexpr");
+    static_assert(functionTakingB(constStrongB) == 42, "FunctionCallable is not constexpr");
+    static_assert(StrongB(B(42)) + StrongB(B(42)) == 84, "FunctionCallable is not constexpr");
+    static_assert(constStrongB + constStrongB == 84, "FunctionCallable is not constexpr");
 }
 
 TEST_CASE("Method callable")
