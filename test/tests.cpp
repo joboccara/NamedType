@@ -705,7 +705,7 @@ constexpr bool operator==(testFunctionCallable_B const& a1, testFunctionCallable
     return a1.x == a2.x;
 }
 
-constexpr const int functionTakingB(testFunctionCallable_B const& b)
+constexpr int functionTakingB(testFunctionCallable_B const& b)
 {
     return b.x;
 };
