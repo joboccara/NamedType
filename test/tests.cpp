@@ -708,7 +708,7 @@ constexpr bool operator==(testFunctionCallable_B const& a1, testFunctionCallable
 constexpr int functionTakingB(testFunctionCallable_B const& b)
 {
     return b.x;
-};
+}
 
 TEST_CASE("Function callable constexpr")
 {
