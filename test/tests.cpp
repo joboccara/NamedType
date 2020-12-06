@@ -989,7 +989,8 @@ TEST_CASE("Dereferencable constexpr")
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Dereferencable>;
 
     constexpr StrongInt a{28};
-    static_assert( *a, "Dereferencable is not constexpr");
+    static_assert( *a == 28, "Dereferencable is not constexpr");
+    static_assert( *StrongInt{28} == 28, "Dereferencable is not constexpr");
 }
 
 TEST_CASE("PreIncrementable")
