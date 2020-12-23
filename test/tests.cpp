@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -99,12 +100,19 @@ TEST_CASE("Implicit conversion of NamedType to NamedType::ref")
     REQUIRE(j.get() == 43);
 }
 
+struct PotentiallyThrowing
+{
+    PotentiallyThrowing(){}
+};
 TEST_CASE("Default construction")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
     StrongInt strongInt;
     strongInt.get() = 42;
     REQUIRE(strongInt.get() == 42);
+    static_assert(std::is_nothrow_constructible<StrongInt>::value, "StrongInt is not nothrow constructible");
+    using StrongPotentiallyThrowing = fluent::NamedType<PotentiallyThrowing, struct  StrongPotentiallyThrowingTag>;
+    static_assert(!std::is_nothrow_constructible<StrongPotentiallyThrowing>::value, "StrongPotentiallyThrowing is nothrow constructible");
 }
 
 template<typename Function>
