@@ -54,10 +54,7 @@ public:
     using UnderlyingType = T;
 
     // constructor
-    template <typename T_ = T, typename = std::enable_if<std::is_default_constructible<T>::value, void>>
-    constexpr NamedType() noexcept(std::is_nothrow_constructible<T>::value) : value_()
-    {
-    }
+    NamedType()  = default;
 
     explicit constexpr NamedType(T const& value) noexcept(std::is_nothrow_copy_constructible<T>::value) : value_(value)
     {

@@ -104,12 +104,37 @@ struct PotentiallyThrowing
 {
     PotentiallyThrowing(){}
 };
+
+struct NonDefaultConstructible
+{
+    NonDefaultConstructible(int){}
+};
+
+struct UserProvided
+{
+    UserProvided();
+};
+UserProvided::UserProvided() = default;
+
 TEST_CASE("Default construction")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag>;
     StrongInt strongInt;
     strongInt.get() = 42;
     REQUIRE(strongInt.get() == 42);
+    static_assert(std::is_nothrow_constructible<StrongInt>::value, "StrongInt is not nothrow constructible");
+
+    //Default constructible
+    static_assert(std::is_default_constructible<StrongInt>::value, "StrongInt is not default constructible");
+    using StrongNonDefaultConstructible = fluent::NamedType<NonDefaultConstructible, struct  StrongNonDefaultConstructibleTag>;
+    static_assert(!std::is_default_constructible<StrongNonDefaultConstructible>::value, "StrongNonDefaultConstructible is default constructible");
+
+    //Trivially constructible
+    static_assert(std::is_trivially_constructible<StrongInt>::value, "StrongInt is not trivially constructible");
+    using StrongUserProvided = fluent::NamedType<UserProvided, struct  StrongUserProvidedTag>;
+    static_assert(!std::is_trivially_constructible<StrongUserProvided>::value, "StrongUserProvided is trivially constructible");
+
+    //Nothrow constructible
     static_assert(std::is_nothrow_constructible<StrongInt>::value, "StrongInt is not nothrow constructible");
     using StrongPotentiallyThrowing = fluent::NamedType<PotentiallyThrowing, struct  StrongPotentiallyThrowingTag>;
     static_assert(!std::is_nothrow_constructible<StrongPotentiallyThrowing>::value, "StrongPotentiallyThrowing is nothrow constructible");
