@@ -38,6 +38,16 @@ matrix:
         apt:
           packages:
             - g++-5
+    - env: CXX=clang++-11 CC=clang-11
+      addons:
+        apt:
+          packages:
+            - clang-11
+            - libc++-11-dev
+            - libc++abi-11-dev
+          sources:
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-11 main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
     - env: CXX=clang++-10 CC=clang-10
       addons:
         apt:
