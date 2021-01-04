@@ -45,12 +45,18 @@ else()
 		-Wzero-as-null-pointer-constant
 		-Wfloat-equal
 		-Wshadow
-		-Weffc++
         $<$<CXX_COMPILER_ID:GNU>:-Wlogical-op>
         $<$<CXX_COMPILER_ID:GNU>:-Wnoexcept>
         $<$<CXX_COMPILER_ID:GNU>:-Wstrict-null-sentinel>
         $<$<CXX_COMPILER_ID:GNU>:-Wuseless-cast>
 	)
+	set(OLD_GNU FALSE)
+	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
+		set(OLD_GNU TRUE)
+	endif()
+	if (NOT ${OLD_GNU})
+		target_compile_options(${PROJECT_NAME} PRIVATE -Weffc++)
+	endif()
 endif()
 
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
