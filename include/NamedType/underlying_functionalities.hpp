@@ -5,8 +5,11 @@
 #include "named_type_impl.hpp"
 
 #include <functional>
-#include <iostream>
 #include <memory>
+
+#if FLUENT_HOSTED == 1
+#   include <iostream>
+#endif
 
 // C++17 constexpr additions
 #if FLUENT_CPP17_PRESENT
@@ -331,13 +334,15 @@ struct Printable : crtp<T, Printable>
     }
 };
 
-template <typename T, typename Parameter, template <typename> class... Skills>
-typename std::enable_if<NamedType<T, Parameter, Skills...>::is_printable, std::ostream&>::type
-operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
-{
-    object.print(os);
-    return os;
-}
+#if FLUENT_HOSTED == 1
+    template <typename T, typename Parameter, template <typename> class... Skills>
+    typename std::enable_if<NamedType<T, Parameter, Skills...>::is_printable, std::ostream&>::type
+    operator<<(std::ostream& os, NamedType<T, Parameter, Skills...> const& object)
+    {
+        object.print(os);
+        return os;
+    }
+#endif
 
 template <typename T>
 struct Hashable

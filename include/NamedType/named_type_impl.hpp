@@ -14,6 +14,12 @@
 #    define FLUENT_CPP17_PRESENT 0
 #endif
 
+#if defined(__STDC_HOSTED__)
+#    define FLUENT_HOSTED 1
+#else
+#    define FLUENT_HOSTED 0
+#endif
+
 // Use [[nodiscard]] if available
 #ifndef FLUENT_NODISCARD_PRESENT
 #    define FLUENT_NODISCARD_PRESENT FLUENT_CPP17_PRESENT
