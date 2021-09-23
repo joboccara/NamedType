@@ -259,36 +259,27 @@ struct BitWiseRightShiftable : crtp<T, BitWiseRightShiftable>
 template <typename T>
 struct Comparable : crtp<T, Comparable>
 {
-    FLUENT_NODISCARD constexpr bool operator<(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator<(Comparable<T> const& other) const
     {
-        return this->underlying().get() < other.get();
+        return this->underlying().get() < other.underlying().get();
     }
-    FLUENT_NODISCARD constexpr bool operator>(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator>(Comparable<T> const& other) const
     {
-        return other.get() < this->underlying().get();
+        return other.underlying().get() < this->underlying().get();
     }
-    FLUENT_NODISCARD constexpr bool operator<=(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator<=(Comparable<T> const& other) const
     {
-        return !(other.get() < this->underlying().get());
+        return !(other < *this);
     }
-    FLUENT_NODISCARD constexpr bool operator>=(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator>=(Comparable<T> const& other) const
     {
         return !(*this < other);
     }
-// On Visual Studio before 19.22, you cannot define constexpr with friend function
-// See: https://stackoverflow.com/a/60400110
-#if defined(_MSC_VER) && _MSC_VER < 1922
-    FLUENT_NODISCARD constexpr bool operator==(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator==(Comparable<T> const& other) const
     {
-        return !(*this < other) && !(other.get() < this->underlying().get());
+        return !(*this < other) && !(other < *this);
     }
-#else
-    FLUENT_NODISCARD friend constexpr bool operator==(Comparable<T> const& self, T const& other)
-    {
-        return !(self < other) && !(other.get() < self.underlying().get());
-    }
-#endif
-    FLUENT_NODISCARD constexpr bool operator!=(T const& other) const
+    FLUENT_NODISCARD constexpr bool operator!=(Comparable<T> const& other) const
     {
         return !(*this == other);
     }
