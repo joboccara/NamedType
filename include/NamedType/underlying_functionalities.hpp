@@ -410,6 +410,10 @@ struct Arithmetic
     , Printable<T>
     , Hashable<T>
 {
+    using PostIncrementable<T>::operator++;
+    using PreIncrementable<T>::operator++;
+    using PostDecrementable<T>::operator--;
+    using PreDecrementable<T>::operator--;
 };
 
 } // namespace fluent
