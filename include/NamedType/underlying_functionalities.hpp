@@ -390,11 +390,27 @@ struct Callable
 };
 
 template <typename T>
-struct Arithmetic
+struct Incrementable
     : PreIncrementable<T>
     , PostIncrementable<T>
-    , PreDecrementable<T>
+{
+    using PostIncrementable<T>::operator++;
+    using PreIncrementable<T>::operator++;
+};
+
+template <typename T>
+struct Decrementable
+    : PreDecrementable<T>
     , PostDecrementable<T>
+{
+    using PostDecrementable<T>::operator--;
+    using PreDecrementable<T>::operator--;
+};
+
+template <typename T>
+struct Arithmetic
+    : Incrementable<T>
+    , Decrementable<T>
     , Addable<T>
     , Subtractable<T>
     , Multiplicable<T>
@@ -410,10 +426,6 @@ struct Arithmetic
     , Printable<T>
     , Hashable<T>
 {
-    using PostIncrementable<T>::operator++;
-    using PreIncrementable<T>::operator++;
-    using PostDecrementable<T>::operator--;
-    using PreDecrementable<T>::operator--;
 };
 
 } // namespace fluent
