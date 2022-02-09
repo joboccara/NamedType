@@ -963,6 +963,14 @@ TEST_CASE("Arithmetic")
 
     a /= b;
     CHECK(a.get() == 5);
+
+    b = ++a;
+    CHECK(a.get() == 6);
+    CHECK(b.get() == 6);
+
+    b = a++;
+    CHECK(a.get() == 7);
+    CHECK(b.get() == 6);
 }
 
 TEST_CASE("Version macros are defined")
@@ -1093,3 +1101,37 @@ TEST_CASE("PostDecrementable constexpr C++17")
     static_assert( (StrongInt{1}--).get() == 1, "PostDecrementable is not constexpr");
 }
 #endif
+
+TEST_CASE("Incrementable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Incrementable>;
+    {
+        StrongInt a{1};
+        StrongInt b = ++a;
+        CHECK( a.get() == 2 );
+        CHECK( b.get() == 2 );
+    }
+    {
+        StrongInt a{1};
+        StrongInt b = a++;
+        CHECK( a.get() == 2 );
+        CHECK( b.get() == 1 );
+    }
+}
+
+TEST_CASE("Decrementable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Decrementable>;
+    {
+        StrongInt a{1};
+        StrongInt b = --a;
+        CHECK( a.get() == 0 );
+        CHECK( b.get() == 0 );
+    }
+    {
+        StrongInt a{1};
+        StrongInt b = a--;
+        CHECK( a.get() == 0 );
+        CHECK( b.get() == 1 );
+    }
+}
