@@ -382,6 +382,12 @@ struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Pa
     }
 };
 
+template <typename T>
+struct NonDefaultConstructible
+{
+    NonDefaultConstructible() = delete;
+};
+
 template <typename NamedType_>
 struct Callable
     : FunctionCallable<NamedType_>

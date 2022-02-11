@@ -1093,3 +1093,9 @@ TEST_CASE("PostDecrementable constexpr C++17")
     static_assert( (StrongInt{1}--).get() == 1, "PostDecrementable is not constexpr");
 }
 #endif
+
+TEST_CASE("NonDefaultConstructible")
+{
+    using Strong = fluent::NamedType<int, struct StrongTag, fluent::NonDefaultConstructible>;
+    static_assert( !std::is_default_constructible<Strong>::value, "NonDefaultConstructible is default constructible.");
+}
