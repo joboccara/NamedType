@@ -50,6 +50,14 @@
 namespace fluent
 {
 
+namespace details {
+// The NonDefaultConstructible-Skill has this function as a friend, so we can use it to default-construct it.
+template <typename T>
+constexpr T construct() noexcept(std::is_nothrow_default_constructible<T>::value) {
+    return T{};
+}
+} //namespace details
+
 template <typename T>
 using IsNotReference = typename std::enable_if<!std::is_reference<T>::value, void>::type;
 
@@ -62,13 +70,14 @@ public:
     // constructor
     NamedType()  = default;
 
-    explicit constexpr NamedType(T const& value) noexcept(std::is_nothrow_copy_constructible<T>::value) : value_(value)
+    explicit constexpr NamedType(T const& value) noexcept(std::is_nothrow_copy_constructible<T>::value)
+        : Skills<NamedType<T, Parameter, Skills...>>{details::construct<Skills<NamedType<T, Parameter, Skills...>>>()}..., value_(value)
     {
     }
 
     template <typename T_ = T, typename = IsNotReference<T_>>
     explicit constexpr NamedType(T&& value) noexcept(std::is_nothrow_move_constructible<T>::value)
-        : value_(std::move(value))
+        : Skills<NamedType<T, Parameter, Skills...>>{details::construct<Skills<NamedType<T, Parameter, Skills...>>>()}..., value_(std::move(value))
     {
     }
 

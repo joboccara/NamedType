@@ -385,7 +385,12 @@ struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Pa
 template <typename T>
 struct NonDefaultConstructible
 {
-    NonDefaultConstructible() = delete;
+    static constexpr auto is_default_constructible = false;
+
+private:
+    friend NonDefaultConstructible details::construct<NonDefaultConstructible>();
+
+    NonDefaultConstructible() = default;
 };
 
 template <typename NamedType_>

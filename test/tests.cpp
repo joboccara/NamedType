@@ -1097,5 +1097,9 @@ TEST_CASE("PostDecrementable constexpr C++17")
 TEST_CASE("NonDefaultConstructible")
 {
     using Strong = fluent::NamedType<int, struct StrongTag, fluent::NonDefaultConstructible>;
-    static_assert( !std::is_default_constructible<Strong>::value, "NonDefaultConstructible is default constructible.");
+    static_assert(!std::is_trivially_default_constructible<Strong>::value, "NonDefaultConstructible is default constructible.");
+    static_assert(std::is_nothrow_constructible<Strong, const int&>::value, "NonDefaultConstructible is not nothrow constructible from value ref.");
+    static_assert(std::is_nothrow_constructible<Strong, int>::value, "NonDefaultConstructible is not nothrow constructible from value.");
+    static_assert(std::is_nothrow_copy_constructible<Strong>::value, "NonDefaultConstructible is not nothrow copy constructible.");
+    static_assert(std::is_nothrow_move_constructible<Strong>::value, "NonDefaultConstructible is not nothrow move constructible.");
 }
