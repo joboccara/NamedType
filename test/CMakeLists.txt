@@ -14,6 +14,11 @@ add_executable(${PROJECT_NAME} ${testSources})
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${NamedType_SOURCE_DIR}/include/")
 
+if(ANDROID)
+    # This is a dependency of catch2:
+    target_link_libraries(${PROJECT_NAME} PUBLIC "log")
+endif()
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 if (MSVC)
