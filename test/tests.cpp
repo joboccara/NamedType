@@ -541,6 +541,15 @@ TEST_CASE("Comparable constexpr")
     static_assert(!(9_meter >= 10_meter), "Comparable is not constexpr");
 }
 
+TEST_CASE("EqualityComparable")
+{
+    using Name = fluent::NamedType<std::string, struct NameParameter, fluent::EqualityComparable>;
+    REQUIRE((Name("Bob") == Name("Bob")));
+    REQUIRE(!(Name("Bob") == Name("Alice")));
+    REQUIRE((Name("Bob") != Name("Alice")));
+    REQUIRE(!(Name("Bob") != Name("Bob")));
+}
+
 TEST_CASE("ConvertibleWithOperator")
 {
     struct B
