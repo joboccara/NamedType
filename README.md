@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/joboccara/NamedType.svg?branch=master)](https://travis-ci.org/joboccara/NamedType)
 ![GitHub](https://img.shields.io/github/license/joboccara/pipes)
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/namedtype.svg)](https://repology.org/project/namedtype/versions)
+
 A **strong type** is a type used in place of another type to carry specific **meaning** through its **name**.
 
 This project experiments with strong types in C++. All components are in the namespace `fluent`. You can find a collection of blog posts explaining the rationale of the library and usages for strong types on [Fluent C++](https://www.fluentcpp.com/2016/12/08/strong-types-for-strong-interfaces/).
