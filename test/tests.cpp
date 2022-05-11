@@ -993,6 +993,16 @@ TEST_CASE("Printable")
     CHECK(oss.str() == "42");
 }
 
+TEST_CASE("Parseable")
+{
+    using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Parsable>;
+
+    std::stringstream ss{"42"};
+    StrongInt i{};
+    ss >> i;
+    CHECK(i.get() == 42);
+}
+
 TEST_CASE("Dereferencable")
 {
     using StrongInt = fluent::NamedType<int, struct StrongIntTag, fluent::Dereferencable>;
