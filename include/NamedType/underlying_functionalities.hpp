@@ -99,7 +99,9 @@ struct UnaryAddable : crtp<T, UnaryAddable>
 };
 
 template <typename T>
-struct Addable : BinaryAddable<T>, UnaryAddable<T>
+struct FLUENT_EBCO Addable
+    : BinaryAddable<T>
+    , UnaryAddable<T>
 {
     using BinaryAddable<T>::operator+;
     using UnaryAddable<T>::operator+;
@@ -118,7 +120,7 @@ struct BinarySubtractable : crtp<T, BinarySubtractable>
         return this->underlying();
     }
 };
-   
+
 template <typename T>
 struct UnarySubtractable : crtp<T, UnarySubtractable>
 {
@@ -127,14 +129,16 @@ struct UnarySubtractable : crtp<T, UnarySubtractable>
         return T(-this->underlying().get());
     }
 };
-   
+
 template <typename T>
-struct Subtractable : BinarySubtractable<T>, UnarySubtractable<T>
+struct FLUENT_EBCO Subtractable
+    : BinarySubtractable<T>
+    , UnarySubtractable<T>
 {
     using UnarySubtractable<T>::operator-;
     using BinarySubtractable<T>::operator-;
 };
-   
+
 template <typename T>
 struct Multiplicable : crtp<T, Multiplicable>
 {
@@ -374,14 +378,14 @@ struct MethodCallable<NamedType<T, Parameter, Skills...>> : crtp<NamedType<T, Pa
 };
 
 template <typename NamedType_>
-struct Callable
+struct FLUENT_EBCO Callable
     : FunctionCallable<NamedType_>
     , MethodCallable<NamedType_>
 {
 };
 
 template <typename T>
-struct Incrementable
+struct FLUENT_EBCO Incrementable
     : PreIncrementable<T>
     , PostIncrementable<T>
 {
@@ -390,7 +394,7 @@ struct Incrementable
 };
 
 template <typename T>
-struct Decrementable
+struct FLUENT_EBCO Decrementable
     : PreDecrementable<T>
     , PostDecrementable<T>
 {
@@ -399,7 +403,7 @@ struct Decrementable
 };
 
 template <typename T>
-struct Arithmetic
+struct FLUENT_EBCO Arithmetic
     : Incrementable<T>
     , Decrementable<T>
     , Addable<T>
