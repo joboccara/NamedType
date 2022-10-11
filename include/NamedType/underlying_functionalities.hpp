@@ -340,6 +340,22 @@ struct Printable : crtp<T, Printable>
 #endif
 
 template <typename T>
+struct Parsable : crtp<T, Parsable> {
+    static constexpr bool is_parsable = true;
+
+    void parse(std::istream& is) { is >> this->underlying().get(); }
+};
+
+#if FLUENT_HOSTED == 1
+    template <typename T, typename Parameter, template <typename> class... Skills>
+    typename std::enable_if<NamedType<T, Parameter, Skills...>::is_parsable, std::istream&>::type
+    operator>>(std::istream& is, NamedType<T, Parameter, Skills...>& object) {
+        object.parse(is);
+        return is;
+    }
+#endif
+
+template <typename T>
 struct Hashable
 {
     static constexpr bool is_hashable = true;
