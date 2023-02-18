@@ -289,6 +289,19 @@ struct Comparable : crtp<T, Comparable>
     }
 };
 
+template <typename T>
+struct EqualityComparable : crtp<T, EqualityComparable>
+{
+    FLUENT_NODISCARD constexpr bool operator==(EqualityComparable<T> const& other) const
+    {
+        return this->underlying().get() == other.underlying().get();
+    }
+    FLUENT_NODISCARD constexpr bool operator!=(EqualityComparable<T> const& other) const
+    {
+        return !(*this == other);
+    }
+};
+
 template< typename T >
 struct Dereferencable;
 
